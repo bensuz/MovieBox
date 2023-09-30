@@ -1,0 +1,24 @@
+.mySwiper {
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: plum; */
+}
+
+.swiper-slide {
+    display: flex;
+    justify-content: center;
+    /* margin: auto; */
+    max-width: 30%;
+    /* background-color: aqua; */
+    padding-bottom: 50px;
+}
+
+.slider-cards {
+    margin: auto;
+    width: 100%;
+}
+.card-img {
+    overflow: hidden;
+}
