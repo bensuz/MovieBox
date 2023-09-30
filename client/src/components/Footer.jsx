@@ -4,9 +4,9 @@ import logo from "../assets/logo_new.png";
 
 const Footer = () => {
     return (
-        <div className="bg-slate-900 text-white h-56 px-64 py-10">
+        <div className="bg-slate-900 text-white min-h-56 px-64 py-10 max-xl:py-10 max-xl:gap-2 max-xl:px-10 max-xl:flex max-xl:flex-col max-xl:items-center max-xl:justify-center">
             {" "}
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center max-xl:flex-col max-xl:items-center max-xl:justify-center max-xl:gap-2">
                 <div className="flex items-center gap-2 my-2">
                     <img
                         src={logo}
@@ -17,8 +17,8 @@ const Footer = () => {
                         MovieBox
                     </h2>
                 </div>
-                <div>
-                    <label className="text-lg">
+                <div className="max-xl:flex max-xl:flex-col max-xl:items-center max-xl:justify-center ">
+                    <label className="text-md lg:text-lg">
                         Subscribe to our newsletter!
                     </label>
                     <Paper
@@ -27,7 +27,7 @@ const Footer = () => {
                             p: "2px 4px",
                             display: "flex",
                             alignItems: "center",
-                            width: 400,
+                            width: 300,
                         }}
                     >
                         <InputBase
@@ -49,14 +49,16 @@ const Footer = () => {
                     </Paper>
                 </div>
             </div>
-            <div className="flex gap-5 my-5">
+            <div className="flex items-center md:justify-start gap-5 my-5 max-xl:gap-4 max-xl:items-center max-xl:justify-center max-md:justify-center ">
                 <p>Privacy</p>
                 <p>Contact Us</p>
                 <p>Cookie Preferences</p>
             </div>
-            <div className="text-xs flex flex-col justify-end items-end ">
-                <p>All rights reserved. 2023.</p>
-                <p>
+            <div className="text-xs flex flex-col justify-end items-end max-xl:items-center max-xl:justify-center max-md:justify-center w-full">
+                <p className="w-full text-center xl:text-end">
+                    All rights reserved. 2023.
+                </p>
+                <p className="w-full text-center xl:text-end">
                     This site is protected by reCAPTCHA and the Google Privacy
                     Policy and Terms of Service apply.
                 </p>

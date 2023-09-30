@@ -1,75 +1,12 @@
-// import { Link, NavLink } from "react-router-dom";
-
-// import logo from "../assets/logo_new.png";
-// import SearchIcon from "@mui/icons-material/Search";
-// import MoreIcon from "@mui/icons-material/MoreVert";
-// import { Box, IconButton } from "@mui/material";
-// import UserDropdown from "./UserDropdown";
-// import Notifications from "./Notifications";
-
-// const RegularHeader = () => {
-//     return (
-//         <>
-//             <nav className="fixed  h-28 flex justify-between items-center gap-x-10  w-full mb-5 z-50 bg-slate-900">
-//                 <Link to="/">
-//                     <div className="flex gap-5 mx-10 items-center ">
-//                         {" "}
-//                         <img
-//                             src={logo}
-//                             alt=""
-//                             className="text-white  top-4 text-xl font-bold  w-16"
-//                         />
-//                         <h2 className=" text-mb-quartery top-5 text-5xl font-bold">
-//                             MovieBox
-//                         </h2>
-//                     </div>
-//                 </Link>
-
-//                 <div className="flex justify-center items-center">
-//                     <ul className="text-mb-quartery flex gap-10 text-xl font-bold p-5 justify-center items-center">
-//                         <li>
-//                             <NavLink to="/mylist" className="nav-link">
-//                                 MY LIST
-//                             </NavLink>
-//                         </li>
-//                     </ul>
-//                     <Box className="text-mb-quartery  justify-end items-end mx-14">
-//                         <IconButton
-//                             size="large"
-//                             aria-label="search"
-//                             color="inherit"
-//                         >
-//                             <SearchIcon />
-//                         </IconButton>
-//                         <IconButton
-//                             size="large"
-//                             aria-label="display more actions"
-//                             edge="end"
-//                             color="inherit"
-//                         >
-//                             <MoreIcon />
-//                         </IconButton>
-//                     </Box>
-//                     <Notifications />
-//                     <UserDropdown />
-//                 </div>
-//             </nav>
-//         </>
-//     );
-// };
-
-// export default RegularHeader;
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/logo_new.png";
-import userAvatar from "../assets/bird.png";
 import { Link, NavLink, useLocation } from "react-router-dom";
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
 import { Navigate } from "react-router";
 import defaultAvatar from "../assets/useravatar.png";
-import axios from "../axiosInstance";
 
 function classNames(...classes) {
     return classes.filter(Boolean).join(" ");
@@ -97,48 +34,28 @@ const RegularHeader = () => {
     return (
         <Disclosure
             as="nav"
-            className="fixed  h-28 flex justify-between items-center gap-x-10  w-full mb-5 z-50 bg-slate-900 shadow-lg shadow-slate-700"
+            className="fixed  h-28 flex flex-col justify-center items-center gap-x-10  w-full mb-5 z-50 bg-slate-900 shadow-lg shadow-slate-700 min-w-min"
         >
             {({ open }) => (
                 <>
                     <div className="mx-auto w-full max-w-8xl px-2 sm:px-6 lg:px-8 ">
                         <div className="relative flex h-16 items-center justify-between w-full">
-                            <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-                                {/* Mobile menu button*/}
-                                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-[#8C1960] hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
-                                    <span className="absolute -inset-0.5" />
-                                    <span className="sr-only">
-                                        Open main menu
-                                    </span>
-                                    {open ? (
-                                        <XMarkIcon
-                                            className="block h-6 w-6"
-                                            aria-hidden="true"
-                                        />
-                                    ) : (
-                                        <Bars3Icon
-                                            className="block h-6 w-6"
-                                            aria-hidden="true"
-                                        />
-                                    )}
-                                </Disclosure.Button>
-                            </div>
-                            <div className="flex flex-1 items-center justify-between sm:items-stretch sm:justify-between  ">
+                            <div className="flex w-full items-center justify-between sm:items-stretch sm:justify-between  ">
                                 <Link to="/">
                                     {" "}
-                                    <div className="flex gap-5 mx-10 items-center">
+                                    <div className="flex gap-5 md-mx-10 items-center">
                                         <img
-                                            className="text-white  top-4 text-xl font-bold  w-16"
+                                            className="text-white  top-4 text-xl font-bold  md:w-16 w-12"
                                             src={logo}
                                             alt="MovieBox logo"
                                         />
-                                        <p className="text-mb-quartery top-5 text-5xl font-bold">
+                                        <p className="text-mb-quartery top-5 lg:text-3xl xl:text-5xl text-2xl font-bold">
                                             MovieBox
                                         </p>
                                     </div>
                                 </Link>
-                                <div className="hidden sm:ml-6 sm:block">
-                                    <div className="flex items-center  space-x-4 gap-8 h-full ">
+                                <div className="hidden lg:ml-6 lg:block">
+                                    <div className="flex items-center  space-x-4 h-full ">
                                         {updatedNavigation.map((item) => (
                                             <NavLink
                                                 key={item.name}
@@ -156,20 +73,40 @@ const RegularHeader = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                            <div className="absolute inset-y-0 right-0 flex  items-center lg:hidden ">
+                                {/* Mobile menu button*/}
+                                <Disclosure.Button className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-mb-quartery hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white ">
+                                    {/* <span className="absolute -inset-0.5" />
+                                    <span className="sr-only">
+                                        Open main menu
+                                    </span> */}
+                                    {open ? (
+                                        <XMarkIcon
+                                            className="block h-6 w-6"
+                                            aria-hidden="true"
+                                        />
+                                    ) : (
+                                        <Bars3Icon
+                                            className="block h-6 w-6"
+                                            aria-hidden="true"
+                                        />
+                                    )}
+                                </Disclosure.Button>
+                            </div>
+                            <div className="absolute inset-y-0 right-10 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:mr-10 xl:mr-2 sm:pr-0">
                                 {/* Profile dropdown */}
                                 {context.user ? (
                                     <>
                                         {" "}
                                         <button
                                             type="button"
-                                            className="relative rounded-full bg-mb-quartery p-1 text-slate-800 hover:text-[#8C1960] focus:outline-[#8C1960] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#8C1960]"
+                                            className="relative rounded-full bg-mb-quartery p-1 text-slate-800 hover:text-[#8C1960] focus:outline-[#8C1960] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#8C1960] max-[400px]:hidden"
                                         >
                                             <span className="sr-only">
                                                 View notifications
                                             </span>
                                             <BellIcon
-                                                className="sm:w-6 sm:h-6 w-6 h-6"
+                                                className="md:w-6 md:h-6 w-4 h-4"
                                                 aria-hidden="true"
                                             />
                                         </button>
@@ -178,14 +115,14 @@ const RegularHeader = () => {
                                             className="relative ml-3"
                                         >
                                             <div>
-                                                <Menu.Button className="relative flex rounded-full  text-sm overflow-hidden focus:ring-2 focus:ring-[#a57794] sm:w-12 sm:h-12 w-8 h-8">
+                                                <Menu.Button className="relative flex rounded-full  text-sm overflow-hidden focus:ring-2 focus:ring-[#a57794] lg:w-12 lg:h-12 sm:w-8 sm:h-8 md:w-10 md:h-10 w-8 h-8 max-[400px]:hidden">
                                                     <span className="sr-only">
                                                         Open user menu
                                                     </span>
                                                     <img
                                                         src={defaultAvatar}
                                                         alt=""
-                                                        className="w-84 h-84"
+                                                        className=""
                                                     />
                                                     {/* {userAvatar ? (
                                                         <img
@@ -214,11 +151,11 @@ const RegularHeader = () => {
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                <Menu.Items className="absolute  right-0 z-10 mt-4 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none ">
                                                     <Menu.Item>
                                                         <Link
                                                             to="/profile"
-                                                            className="block px-4 py-2 text-sm text-gray-700"
+                                                            className="block border-b border-gray-200 px-4 py-2 text-sm text-gray-700 mx-1 rounded-md  hover:bg-mb-primary  hover:text-mb-secondary"
                                                         >
                                                             Your Profile
                                                         </Link>
@@ -226,7 +163,7 @@ const RegularHeader = () => {
                                                     <Menu.Item>
                                                         <Link
                                                             to="/settings"
-                                                            className="block px-4 py-2 text-sm text-gray-700"
+                                                            className="block border-b border-gray-200 px-4 py-2 text-sm text-gray-700 mx-1 rounded-md hover:bg-mb-primary  hover:text-mb-secondary"
                                                         >
                                                             Settings
                                                         </Link>
@@ -234,7 +171,7 @@ const RegularHeader = () => {
                                                     <Menu.Item>
                                                         <Link
                                                             to="/"
-                                                            className="block px-4 py-2 text-sm text-gray-700"
+                                                            className="block border-b border-gray-200 px-4 py-2 text-sm text-gray-700 mx-1 rounded-md hover:bg-mb-primary  hover:text-mb-secondary"
                                                             onClick={
                                                                 handleLogout
                                                             }
@@ -261,25 +198,36 @@ const RegularHeader = () => {
                         </div>
                     </div>
 
-                    <Disclosure.Panel className="sm:hidden ">
-                        <div className="space-y-1 px-2 pb-3 pt-2 z-50 bg-white">
-                            {updatedNavigation.map((item) => (
-                                <Disclosure.Button
-                                    key={item.name}
-                                    as="a"
-                                    href={item.href}
-                                    className={classNames(
-                                        item.current
-                                            ? "bg-[#8C1960] text-white block rounded-md px-3 py-2 text-base font-medium"
-                                            : "hover:bg-[#8C1960]  hover:text-white block rounded-md px-3 py-2 text-base font-medium"
-                                    )}
-                                    aria-current={
-                                        item.current ? "page" : undefined
-                                    }
-                                >
-                                    {item.name}
-                                </Disclosure.Button>
-                            ))}
+                    <Disclosure.Panel className="lg:hidden ">
+                        {" "}
+                        <div className="absolute divide-y right-6 z-50 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                            <Transition
+                                enter="transition ease-out duration-100"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95"
+                            >
+                                {" "}
+                                {updatedNavigation.map((item) => (
+                                    <Disclosure.Button
+                                        key={item.name}
+                                        as="a"
+                                        href={item.href}
+                                        className={classNames(
+                                            item.current
+                                                ? "bg-mb-quartery text-white block border-b border-gray-500 rounded-md px-2 py-2 mb-2 mx-1 text-center text-sm font-medium"
+                                                : "hover:bg-mb-primary border-b border-gray-200 hover:text-mb-secondary block rounded-md px-2 py-2 mx-1 text-center text-sm font-medium"
+                                        )}
+                                        aria-current={
+                                            item.current ? "page" : undefined
+                                        }
+                                    >
+                                        {item.name}
+                                    </Disclosure.Button>
+                                ))}
+                            </Transition>
                         </div>
                     </Disclosure.Panel>
                 </>
