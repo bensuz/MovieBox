@@ -64,7 +64,7 @@ const Movies = () => {
                 <div className="bg-slate-800 p-10 flex flex-col items-center justify-center">
                     <Link
                         to="/mylist"
-                        className="text-white text-xl lg:text-2xl font-bold self-start "
+                        className="text-white text-xl lg:text-2xl font-bold self-start font-scada"
                     >
                         MY LIST
                     </Link>
@@ -185,8 +185,8 @@ const Movies = () => {
             )}
 
             {/* Discover */}
-            <div className="p-10 bg-mb-tertiary ">
-                <h2 className="text-white text-xl lg:text-2xl font-bold ">
+            <div className="p-10 bg-mb-tertiary">
+                <h2 className="text-white text-xl lg:text-2xl font-bold font-scada">
                     DISCOVER
                 </h2>
                 <Discover />

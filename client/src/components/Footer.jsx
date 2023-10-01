@@ -4,7 +4,7 @@ import logo from "../assets/logo_new.png";
 
 const Footer = () => {
     return (
-        <div className="bg-slate-900 text-white min-h-56 px-64 py-10 max-xl:py-10 max-xl:gap-2 max-xl:px-10 max-xl:flex max-xl:flex-col max-xl:items-center max-xl:justify-center">
+        <div className="bg-slate-900 font-figtree text-white min-h-56 px-64 py-10 max-xl:py-10 max-xl:gap-2 max-xl:px-10 max-xl:flex max-xl:flex-col max-xl:items-center max-xl:justify-center">
             {" "}
             <div className="flex justify-between items-center max-xl:flex-col max-xl:items-center max-xl:justify-center max-xl:gap-2">
                 <div className="flex items-center gap-2 my-2">

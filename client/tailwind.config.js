@@ -12,6 +12,8 @@ export default {
             },
             fontFamily: {
                 poppins: ["Poppins", "sans-serif"],
+                figtree: ["Figtree", "sans-serif"],
+                scada: ["Scada", "sans-serif"],
             },
             height: {
                 144: "36rem",

@@ -29,7 +29,7 @@ const Discover = () => {
     };
 
     return (
-        <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center my-3 gap-8 ">
+        <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center my-3 gap-8 pb-20 ">
             {publicMovies.map((movie) => (
                 <div
                     key={movie.id}

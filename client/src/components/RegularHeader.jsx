@@ -34,7 +34,7 @@ const RegularHeader = () => {
     return (
         <Disclosure
             as="nav"
-            className="fixed  h-28 flex flex-col justify-center items-center gap-x-10  w-full mb-5 z-50 bg-slate-900 shadow-lg shadow-slate-700 min-w-min"
+            className="fixed font-figtree h-28 flex flex-col justify-center items-center gap-x-10  w-full mb-5 z-50 bg-slate-900 shadow-lg shadow-slate-700 min-w-min"
         >
             {({ open }) => (
                 <>
@@ -45,11 +45,11 @@ const RegularHeader = () => {
                                     {" "}
                                     <div className="flex gap-5 md-mx-10 items-center">
                                         <img
-                                            className="text-white  top-4 text-xl font-bold  md:w-16 w-12"
+                                            className="text-white top-4 text-xl font-bold  md:w-16 w-12"
                                             src={logo}
                                             alt="MovieBox logo"
                                         />
-                                        <p className="text-mb-quartery top-5 lg:text-3xl xl:text-5xl text-2xl font-bold">
+                                        <p className="text-mb-quartery font-poppins  top-5 lg:text-3xl xl:text-5xl text-2xl font-bold">
                                             MovieBox
                                         </p>
                                     </div>
