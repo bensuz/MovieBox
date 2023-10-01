@@ -11,12 +11,14 @@ const DiscoverDetails = () => {
     const [error, setError] = useState(null);
     const [movie, setMovie] = useState(null);
     const [title, setTitle] = useState("");
-    const [year, setYear] = useState("");
+    const [genre, setGenre] = useState("");
+    const [date, setDate] = useState("");
     const [rating, setRating] = useState("");
     const [poster, setPoster] = useState("");
-    // eslint-disable-next-line no-unused-vars
-    const [director, setDirector] = useState("");
+    const [overview, setOverview] = useState("");
+    const [language, setLanguage] = useState("");
     const context = useContext(AuthContext);
+    const numericRating = parseFloat(rating);
 
     useEffect(() => {
         const fetchMovie = async () => {
@@ -28,11 +30,14 @@ const DiscoverDetails = () => {
                 );
                 setMovie(response.data);
                 setTitle(response.data.title);
-                setYear(response.data.release_date);
+                setGenre(response.data.genres[0].name);
+                setDate(response.data.release_date);
                 setRating(response.data.vote_average);
                 setPoster(
                     `https://image.tmdb.org/t/p/original/${response.data.poster_path}`
                 );
+                setOverview(response.data.overview);
+                setLanguage(response.data.original_language);
                 console.log(parseInt(rating));
             } catch (error) {
                 console.error("Error fetching movie details:", id);
@@ -46,17 +51,18 @@ const DiscoverDetails = () => {
 
     const handleAddMyList = () => {
         // Make a POST request to your server with the movie data
-        const yearInt = parseInt(year.slice(0, 4));
         const ratingInt = parseInt(rating);
-        console.log(yearInt);
+
         axios
             .post(`${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`, {
                 user_id: context.user.id,
                 title,
-                year: yearInt,
-                rating: ratingInt,
+                genre,
+                date,
+                rating,
+                language,
                 poster,
-                director,
+                overview,
             })
             .then((res) => {
                 Swal.fire({
@@ -76,60 +82,102 @@ const DiscoverDetails = () => {
     const backgroundImageStyle = movie
         ? {
               backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`,
+              backgroundSize: "cover",
           }
         : {};
+
+    const overlayStyle = {
+        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        backdropFilter: "blur(10px)",
+    };
+
+    const releaseDate = new Date(movie?.release_date);
+    const formattedReleaseDate = releaseDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
 
     return (
         <>
             <div
-                className=" py-72 w-full min-h-fit flex items-center justify-center"
+                className=" relative py-72 w-full min-h-fit flex items-center justify-center"
                 style={backgroundImageStyle}
             >
-                {" "}
+                <div
+                    style={overlayStyle}
+                    className="absolute inset-0 z-0"
+                ></div>{" "}
                 {error && <p>{error}</p>}
                 {movie && (
                     <>
                         {" "}
-                        <div className="flex bg-white rounded-l-xl border-4 shadow-2xl shadow-gray-400 border-mb-quartery ">
-                            <div className="flex justify-center items-center min-h-[600px] overflow-hidden min-w-1/3">
+                        <div className="z-10 flex max-xl:flex-col  rounded-l-xl  max-xl:rounded-t-xl shadow-xl shadow-slate-500  w-5/6 text-white">
+                            <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3">
                                 <img
                                     src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
                                     alt=""
-                                    className="rounded-l-xl shadow-2xl shadow-gray-400 w-full"
+                                    className="xl:rounded-l-xl max-xl:rounded-t-xl shadow-2xl shadow-gray-400 w-full"
                                 />
                             </div>
-                            <div className="  min-h-[600px] overflow-hidden flex flex-col justify-center items-start bg-blue-600 rounded-r-xl">
-                                <h2 className="text-4xl py-5 font-bold">
+                            <div className="  min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
+                                <h2 className="text-6xl xl:pt-20 font-medium uppercase max-md:text-4xl">
                                     {movie.title}
                                 </h2>
-                                <div className="flex justify-start items-start gap-10 pb-8">
-                                    <div className="w-1/2 flex flex-col gap-16">
-                                        <div className=" flex flex-col gap-2">
-                                            <p className="text-lg font-medium p-2">
-                                                Genre: {movie.genres[0].name}
-                                            </p>
-                                            <p className="text-lg font-medium p-2">
-                                                Release Date:{" "}
-                                                {movie.release_date}
-                                            </p>
+                                <div className="flex items-center gap-4 max-sm:gap-1 pt-2 ">
+                                    <p className="text-lg max-md:text-sm font-thin p-2 uppercase">
+                                        {movie.genres[0].name}
+                                    </p>
+                                    <i className="fas fa-diamond text-sm max-sm:hidden"></i>
+                                    <p className="text-lg max-md:text-sm  font-thin p-2 uppercase">
+                                        {movie.genres[1].name}
+                                    </p>
+                                    <i className="fas fa-diamond text-sm max-sm:hidden"></i>
+                                    <p className="text-lg max-md:text-sm font-thin p-2 uppercase">
+                                        {movie.genres[2].name}
+                                    </p>
+                                </div>
+                                <div className="flex justify-start items-start max-xl:w-full max-xl:">
+                                    <div className="w-full flex flex-col gap-16 max-xl:w-full max-xl:p-2">
+                                        <div className=" flex justify-start items-center max-sm:gap-2 gap-12 max-xl:self-center max-xl:gap-10">
                                             <div className="flex justify-start items-center">
                                                 <i
-                                                    className="fas fa-star text-yellow-400 text-2xl mr-0 "
+                                                    className="fas fa-calendar-days text-blue-200 text-xl  mr-0 "
                                                     title="Rating"
                                                 ></i>
-                                                <p className="text-lg font-medium p-2">
-                                                    Rating: {movie.vote_average}
+                                                <p className="text-lg font-thin p-2 max-md:text-sm ">
+                                                    {formattedReleaseDate}
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-start items-center">
+                                                <i
+                                                    className="fas fa-star text-yellow-400 text-xl mr-0 "
+                                                    title="Rating"
+                                                ></i>
+                                                <p className="text-lg font-thin p-2 max-md:text-sm ">
+                                                    {movie.vote_average.toFixed(
+                                                        1
+                                                    )}
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-start items-center">
+                                                <i
+                                                    className="fas fa-comments text-blue-300 text-xl mr-0 "
+                                                    title="Language"
+                                                ></i>
+                                                <p className="text-lg font-thin p-2 uppercase max-md:text-sm ">
+                                                    {movie.original_language}
                                                 </p>
                                             </div>
                                         </div>
                                         <div>
-                                            <p className="text-lg  p-2">
+                                            <p className="text-lg xl:pr-20 p-2 max-md:text-base ">
                                                 {movie.overview}
                                             </p>
                                         </div>
                                         <button
                                             onClick={handleAddMyList}
-                                            className="border rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end "
+                                            className="border rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end mr-10 max-xl:self-center xl:mr-24 "
                                         >
                                             <i
                                                 className="fas fa-heart text-lg leading-none mr-3"

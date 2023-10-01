@@ -38,10 +38,10 @@ module.exports = {
     createMovie: (req, res) => {
         // Controller logic to add a new movie to PG
 
-        const { user_id, title, director, year, rating, poster } = req.body;
+        const { user_id, title, genre, releaseDate, rating, language, poster, overview } = req.body;
         pool.query(
-            "INSERT INTO user_movies (user_id, title, director, year, rating, poster) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *;",
-            [user_id, title, director, year, rating, poster]
+            "INSERT INTO user_movies (user_id, title, genre, release_date, rating, language, poster, overview) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *;",
+            [user_id, title, genre, releaseDate, rating, language, poster, overview]
         )
             .then(({ rows }) => {
                 res.status(200).json(rows[0]);
