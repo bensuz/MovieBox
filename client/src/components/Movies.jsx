@@ -1,3 +1,5 @@
+import { AuthContext } from "../context/Auth";
+import { useContext } from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Card from "@mui/material/Card";
@@ -16,13 +18,11 @@ import { Link } from "react-router-dom";
 import Hero from "./Hero";
 import Discover from "./Discover";
 import { Spinner } from "@material-tailwind/react";
-import { AuthContext } from "../context/Auth";
-import { useContext } from "react";
 
 const Movies = () => {
+    const context = useContext(AuthContext);
     const [movies, setMovies] = useState(null);
     const [userMovies, setUserMovies] = useState(null);
-    const context = useContext(AuthContext);
 
     useEffect(() => {
         axios
@@ -39,18 +39,21 @@ const Movies = () => {
     }, []);
 
     useEffect(() => {
-        axios
-            .get(
-                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
-                    context?.user?.id
-                }`
-            )
-            .then((res) => {
-                console.log(res.data);
-                setUserMovies(res.data);
-            })
-            .catch((e) => console.log(e));
-    }, []);
+        if (context.user) {
+            console.log(context.user);
+            axios
+                .get(
+                    `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                        context.user.id
+                    }`
+                )
+                .then((res) => {
+                    console.log(res.data);
+                    setUserMovies(res.data);
+                })
+                .catch((e) => console.log(e));
+        }
+    }, [context.user]);
 
     if (!movies) {
         return <Spinner className="h-16 w-16 text-mb-quartery" />;

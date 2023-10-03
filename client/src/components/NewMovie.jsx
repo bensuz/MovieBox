@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import RegularHeader from "./RegularHeader";
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
+import { parseISO, isValid } from "date-fns";
+import Swal from "sweetalert2";
 
 const NewMovie = () => {
     const navigate = useNavigate();
@@ -22,21 +24,87 @@ const NewMovie = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios
-            .post(`${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`, {
-                user_id: context.user.id,
-                title,
-                genre,
-                releaseDate,
-                rating: numericRating,
-                language,
-                poster,
-                overview,
-            })
-            .then((res) => {
-                console.log(res.data);
+        const parsedReleaseDate = parseISO(releaseDate);
+        if (!isValid(parsedReleaseDate)) {
+            // Display an error message to the user
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Release Date",
+                text: "Please enter a valid release date in the format YYYY-MM-DD.",
+            });
+            return;
+        }
+        if (isNaN(numericRating) || numericRating < 0 || numericRating > 10) {
+            // Display an error message to the user
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Rating",
+                text: "Please enter a valid numeric rating between 0 and 10.",
+            });
+            return;
+        }
+        // axios
+        // .post(`${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`, {
+        //     user_id: context.user.id,
+        //     title,
+        //     genre,
+        //     releaseDate: parsedReleaseDate,
+        //     rating: numericRating,
+        //     language,
+        //     poster,
+        //     overview,
+        // })
+        // .then((res) => {
+        //     console.log(res.data);
 
-                navigate("/");
+        //     navigate("/");
+        // })
+        // .catch((e) => console.log(e));
+        axios
+            .get(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                    context.user.id
+                }`
+            )
+            .then((res) => {
+                const existingMovies = res.data; // Assuming the response contains the user's movies
+
+                // Check if the movie already exists in the list
+                const movieExists = existingMovies.some(
+                    (movie) => movie.title === title
+                );
+
+                if (movieExists) {
+                    // Display a message indicating that the movie already exists
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Movie Already Exists",
+                        text: "This movie is already in your list.",
+                    });
+                } else {
+                    // Movie does not exist, proceed to add it
+                    axios
+                        .post(
+                            `${
+                                import.meta.env.VITE_SERVER_BASE_URL
+                            }/api/usermovies`,
+                            {
+                                user_id: context.user.id,
+                                title,
+                                genre,
+                                releaseDate: parsedReleaseDate,
+                                rating: numericRating,
+                                language,
+                                poster,
+                                overview,
+                            }
+                        )
+                        .then((res) => {
+                            console.log(res.data);
+                            navigate("/");
+                        })
+                        .catch((e) => console.log(e));
+                }
             })
             .catch((e) => console.log(e));
     };

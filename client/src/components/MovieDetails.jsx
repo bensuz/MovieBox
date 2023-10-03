@@ -10,6 +10,7 @@ const MovieDetails = () => {
     const [movie, setMovie] = useState(null);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         axios
             .get(
                 `${
@@ -73,46 +74,6 @@ const MovieDetails = () => {
 
     return (
         <>
-            {/* <div className="py-[600px] h-96 flex flex-col justify-center items-center">
-                {error && <p>{error}</p>}
-                {movie && (
-                    <>
-                        <div className="flex flex-col justify-center items-start ">
-                            <div className="flex flex-col justify-center items-center">
-                                <h2 className="text-6xl py-5 font-bold">
-                                    {movie.title}
-                                </h2>
-                                <img src={movie.poster} alt="" width={400} />
-                            </div>
-                            <div>
-                                <p className="text-xl font-bold p-2">
-                                    Director: {movie.director}
-                                </p>
-                                <p className="text-xl font-bold p-2">
-                                    Year: {movie.year}
-                                </p>
-                                <p className="text-xl font-bold p-2">
-                                    Rating: {movie.rating}
-                                </p>
-                            </div>
-                        </div>
-                        <div className="my-5 flex gap-8 text-white font-bold">
-                            <Link
-                                to={`/movies/${id}/update`}
-                                className=" border rounded-xl bg-mb-quartery  p-2"
-                            >
-                                Update Movie
-                            </Link>
-                            <button
-                                onClick={handleDelete}
-                                className="border rounded-xl bg-slate-900 text-white p-2"
-                            >
-                                Delete Movie
-                            </button>
-                        </div>
-                    </>
-                )}
-            </div> */}
             <div
                 className=" relative py-72 w-full min-h-fit flex items-center justify-center"
                 style={backgroundImageStyle}

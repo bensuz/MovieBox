@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./movies.css";
 import "swiper/css";
@@ -12,10 +12,17 @@ import { useContext } from "react";
 const MyList = () => {
     const [movies, setMovies] = useState(null);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
     const context = useContext(AuthContext);
+    const dropdownRef = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedCategory, setSelectedCategory] = useState("ALL");
+    const [searchResults, setSearchResults] = useState([]);
+    const [value, setValue] = useState("");
 
-    console.log("useridfrontend", context.user.id);
+    // console.log("useridfrontend", context.user.id);
     useEffect(() => {
+        window.scrollTo(0, 0);
         axios
             .get(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
@@ -23,40 +30,234 @@ const MyList = () => {
                 }`
             )
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 setMovies(res.data);
+                // setGenre(res.data.genre.toLowerCase())
+                setLoading(false);
             })
             .catch((e) => console.log(e));
     }, []);
 
-    if (!movies) {
-        return <Spinner className="h-16 w-16 text-mb-quartery" />;
+    const filterMovies = () => {
+        if (selectedCategory === "ALL") {
+            return movies; // Display all articles when "All" is selected
+        } else {
+            return movies?.filter(
+                (movie) =>
+                    movie?.genre?.toLowerCase() ===
+                    selectedCategory.toLowerCase()
+            );
+        }
+    };
+
+    useEffect(() => {
+        // Filter articles based on selected category
+        const filteredMovies = filterMovies();
+
+        // Filter the filtered articles based on the search input value
+        const searchFilteredMovies = filteredMovies
+            ? filteredMovies?.filter((movie) =>
+                  movie?.title?.toLowerCase().includes(value.toLowerCase())
+              )
+            : [];
+
+        setSearchResults(searchFilteredMovies);
+    }, [value, selectedCategory, movies]);
+
+    useEffect(() => {
+        const handleOutsideClick = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleOutsideClick);
+        return () => {
+            document.removeEventListener("mousedown", handleOutsideClick);
+        };
+    }, []);
+
+    if (loading) {
+        return <Spinner className="h-16 w-16 text-mb-quartery pt-[150px]" />;
     }
 
     const handleAddMovie = () => {
         navigate(`/movies/new`);
     };
+
+    const toggleDropdown = () => {
+        setIsOpen(!isOpen);
+    };
+
     return (
         <>
             {movies.length > 0 ? (
                 <>
                     {" "}
-                    <div className=" bg-slate-800 pt-[150px] flex flex-col justify-center items-center gap-20">
-                        <div className="relative flex w-full gap-2 md:w-max text-white ">
-                            <Input
-                                type="search"
-                                label="Search in My List"
-                                className="pr-20 border-t-white h-11 min-w-[400px] "
-                            />
-                            <Button
-                                size="sm"
-                                className="!absolute right-1 top-1 rounded bg-mb-primary text-mb-secondary font-bold h-8"
+                    <div className=" bg-slate-800 pt-[150px] flex flex-col justify-center items-center gap-20 min-h-screen  pb-10 ">
+                        <div className="flex gap-4 items-center justify-center max-lg:flex-col-reverse ">
+                            <div
+                                className="flex  gap-4 relative"
+                                ref={dropdownRef}
                             >
-                                Search
-                            </Button>
+                                <button
+                                    id="dropdown-button"
+                                    onClick={toggleDropdown}
+                                    className="flex justify-start pl-4 items-center text-sm border rounded-lg text-white border-white h-10 min-w-[160px]"
+                                    type="button"
+                                >
+                                    All categories
+                                    <svg
+                                        className={`   w-2.5 h-2.5 ml-2.5 ${
+                                            isOpen ? "transform rotate-180" : ""
+                                        }`}
+                                        aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 10 6"
+                                    >
+                                        <path
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m1 1 4 4 4-4"
+                                        />
+                                    </svg>
+                                </button>
+                                <div
+                                    id="_id"
+                                    className={`absolute z-10 ${
+                                        isOpen ? "block" : "hidden"
+                                    } bg-white divide-y divide-gray-100 rounded-lg shadow w-44 top-12 left-0 `}
+                                >
+                                    <ul
+                                        className="py-2 text-sm text-gray-700  "
+                                        aria-labelledby="dropdown-button"
+                                    >
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory("ALL")
+                                                }
+                                            >
+                                                ALL
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "ACTION"
+                                                    )
+                                                }
+                                            >
+                                                ACTION
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "SCIENCEFICTION"
+                                                    )
+                                                }
+                                            >
+                                                SCIENCE FICTION
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "HORROR"
+                                                    )
+                                                }
+                                            >
+                                                HORROR
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory("DRAMA")
+                                                }
+                                            >
+                                                DRAMA
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "COMEDY"
+                                                    )
+                                                }
+                                            >
+                                                COMEDY
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "ROMANCE"
+                                                    )
+                                                }
+                                            >
+                                                ROMANCE
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "THRILLER"
+                                                    )
+                                                }
+                                            >
+                                                THRILLER
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div className="relative flex w-full gap-2 md:w-max text-white ">
+                                <Input
+                                    type="search"
+                                    label="Search in My List"
+                                    className="pr-20 border-t-white h-11 min-w-[400px] max-md:min-w-[100px] "
+                                    value={value}
+                                    onChange={(e) => setValue(e.target.value)}
+                                />
+                                <Button
+                                    size="sm"
+                                    className="!absolute right-1 top-1 rounded bg-mb-primary text-mb-secondary font-bold h-8 "
+                                >
+                                    Search
+                                </Button>
+                            </div>
                         </div>
-                        <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center  gap-8 ">
-                            {movies.map((movie) => (
+                        <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center  gap-8 pb-20">
+                            {searchResults.map((movie) => (
                                 <div
                                     key={movie.id}
                                     className="w-64 h-[430px] bg-gray-100 rounded-xl overflow-hidden hover:scale-105 transition-all duration-200"

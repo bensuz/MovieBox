@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
+import YouTube from "react-youtube";
 
 const DiscoverDetails = () => {
     const { id } = useParams();
@@ -18,9 +19,10 @@ const DiscoverDetails = () => {
     const [overview, setOverview] = useState("");
     const [language, setLanguage] = useState("");
     const context = useContext(AuthContext);
-    const numericRating = parseFloat(rating);
+    const [trailers, setTrailers] = useState([]);
 
     useEffect(() => {
+        window.scrollTo(0, 0);
         const fetchMovie = async () => {
             try {
                 const response = await axios.get(
@@ -30,15 +32,15 @@ const DiscoverDetails = () => {
                 );
                 setMovie(response.data);
                 setTitle(response.data.title);
-                setGenre(response.data.genres[0].name);
+                setGenre(response.data?.genres[0]?.name);
                 setDate(response.data.release_date);
-                setRating(response.data.vote_average);
+                setRating(parseFloat(response.data.vote_average));
                 setPoster(
                     `https://image.tmdb.org/t/p/original/${response.data.poster_path}`
                 );
                 setOverview(response.data.overview);
                 setLanguage(response.data.original_language);
-                console.log(parseInt(rating));
+                // console.log(response.data);
             } catch (error) {
                 console.error("Error fetching movie details:", id);
                 setError(error);
@@ -49,36 +51,101 @@ const DiscoverDetails = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    useEffect(() => {
+        const fetchTrailers = async () => {
+            try {
+                // Make a request to the YouTube Data API to get trailers based on the movie title
+                const response = await axios.get(
+                    "https://www.googleapis.com/youtube/v3/search",
+                    {
+                        params: {
+                            key: "AIzaSyDJKInCL6Q5UmkNOaacpQkvQA6cj5gO8E0", // Replace with your YouTube API key
+                            q: `${title} official trailer`, // Search for official trailers
+                            part: "snippet",
+                            type: "video",
+                            maxResults: 3, // You can adjust this number
+                        },
+                    }
+                );
+
+                // Extract the video IDs from the API response
+                const trailerIds = response.data.items.map(
+                    (item) => item.id.videoId
+                );
+
+                // Construct the YouTube video URLs
+                const trailerUrls = trailerIds.map(
+                    (videoId) => `https://www.youtube.com/watch?v=${videoId}`
+                );
+
+                // Set the trailers state variable with the video URLs
+                setTrailers(trailerUrls);
+            } catch (error) {
+                console.error("Error fetching trailers:", error);
+            }
+        };
+
+        fetchTrailers(); // Call the fetchTrailers function
+    }, [title]);
+    const videoId = trailers[0]?.split("v=")[1];
+    console.log(trailers);
     const handleAddMyList = () => {
         // Make a POST request to your server with the movie data
-        const ratingInt = parseInt(rating);
 
+        const ratingInt = parseInt(rating);
         axios
-            .post(`${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`, {
-                user_id: context.user.id,
-                title,
-                genre,
-                date,
-                rating,
-                language,
-                poster,
-                overview,
-            })
+            .get(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                    context.user.id
+                }`
+            )
             .then((res) => {
-                Swal.fire({
-                    position: "top-end",
-                    icon: "success",
-                    title: "Movie has been added to My List",
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-                console.log("Movie added to the list:", res.data);
+                const existingMovies = res.data;
+                const movieExists = existingMovies.some(
+                    (movie) => movie.title === title
+                );
+
+                if (movieExists) {
+                    // Display a message indicating that the movie already exists
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Movie Already Exists",
+                        text: "This movie is already in your list.",
+                    });
+                } else {
+                    axios
+                        .post(
+                            `${
+                                import.meta.env.VITE_SERVER_BASE_URL
+                            }/api/usermovies`,
+                            {
+                                user_id: context.user.id,
+                                title,
+                                genre,
+                                date,
+                                ratingInt,
+                                language,
+                                poster,
+                                overview,
+                            }
+                        )
+                        .then((res) => {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "Movie has been added to My List",
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                            console.log("Movie added to the list:", res.data);
+                        })
+                        .catch((e) => console.log(e));
+                }
             })
-            .catch((e) => {
-                console.log("Error adding movie to the list:", e);
-            });
+            .catch((e) => console.log(e));
     };
 
+    console.log(trailers[0]);
     const backgroundImageStyle = movie
         ? {
               backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`,
@@ -115,30 +182,30 @@ const DiscoverDetails = () => {
                         <div className="z-10 flex max-xl:flex-col  rounded-l-xl  max-xl:rounded-t-xl shadow-xl shadow-slate-500  w-5/6 text-white">
                             <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3">
                                 <img
-                                    src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                                    src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
                                     alt=""
                                     className="xl:rounded-l-xl max-xl:rounded-t-xl shadow-2xl shadow-gray-400 w-full"
                                 />
                             </div>
-                            <div className=" font-scada min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
+                            <div className=" font- min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
                                 <h2 className="text-6xl xl:pt-20 font-medium uppercase max-md:text-4xl">
-                                    {movie.title}
+                                    {movie?.title}
                                 </h2>
                                 <div className="flex items-center gap-4 max-sm:gap-1 pt-2 ">
                                     <p className="text-lg max-md:text-sm font-thin p-2 uppercase">
-                                        {movie.genres[0].name}
+                                        {movie.genres[0]?.name}
                                     </p>
                                     <i className="fas fa-diamond text-sm max-sm:hidden"></i>
                                     <p className="text-lg max-md:text-sm  font-thin p-2 uppercase">
-                                        {movie.genres[1].name}
+                                        {movie.genres[1]?.name}
                                     </p>
                                     <i className="fas fa-diamond text-sm max-sm:hidden"></i>
                                     <p className="text-lg max-md:text-sm font-thin p-2 uppercase">
-                                        {movie.genres[2].name}
+                                        {movie.genres[2]?.name}
                                     </p>
                                 </div>
                                 <div className="flex justify-start items-start max-xl:w-full max-xl:">
-                                    <div className="w-full flex flex-col gap-16 max-xl:w-full max-xl:p-2">
+                                    <div className="w-full flex flex-col gap-12 max-xl:w-full max-xl:p-2">
                                         <div className=" flex justify-start items-center max-sm:gap-2 gap-12 max-xl:self-center max-xl:gap-10">
                                             <div className="flex justify-start items-center">
                                                 <i
@@ -155,7 +222,7 @@ const DiscoverDetails = () => {
                                                     title="Rating"
                                                 ></i>
                                                 <p className="text-lg font-thin p-2 max-md:text-sm ">
-                                                    {movie.vote_average.toFixed(
+                                                    {movie?.vote_average.toFixed(
                                                         1
                                                     )}
                                                 </p>
@@ -165,14 +232,27 @@ const DiscoverDetails = () => {
                                                     className="fas fa-comments text-blue-300 text-xl mr-0 "
                                                     title="Language"
                                                 ></i>
-                                                <p className="text-lg font-thin p-2 uppercase max-md:text-sm ">
-                                                    {movie.original_language}
+                                                <p className="text-lg font-thin px-2 uppercase max-md:text-sm ">
+                                                    {movie?.original_language}
                                                 </p>
                                             </div>
                                         </div>
+                                        <div className="youtube-container w-[600px]">
+                                            <YouTube
+                                                videoId={videoId}
+                                                className="aspect-w-16 aspect-h-9"
+                                                opts={{
+                                                    height: "auto",
+                                                    width: "full",
+                                                    playerVars: {
+                                                        autoplay: 0,
+                                                    },
+                                                }}
+                                            />
+                                        </div>
                                         <div>
-                                            <p className="text-lg xl:pr-20 p-2 max-md:text-base ">
-                                                {movie.overview}
+                                            <p className="text-lg xl:pr-20 px-2 max-md:text-base ">
+                                                {movie?.overview}
                                             </p>
                                         </div>
                                         <button

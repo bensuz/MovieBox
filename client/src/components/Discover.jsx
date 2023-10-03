@@ -2,9 +2,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../context/Auth";
+import { useContext } from "react";
 
 const Discover = () => {
     const [publicMovies, setPublicMovies] = useState([]);
+    const context = useContext(AuthContext);
+    const [titles, setTitles] = useState([]);
+    const [existingTitles, setExistingTitles] = useState([]);
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -15,7 +20,11 @@ const Discover = () => {
                     }/api/publicmovies/public`
                 );
                 setPublicMovies(response.data);
-                console.log(response.data);
+                const titles = response.data.map(
+                    (movie) => movie.original_title
+                );
+                setTitles(titles);
+                console.log(titles);
             } catch (error) {
                 console.error("Error fetching movies:", error);
             }
@@ -23,6 +32,26 @@ const Discover = () => {
 
         fetchMovies();
     }, []);
+
+    useEffect(() => {
+        axios
+            .get(
+                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                    context?.user?.id
+                }`
+            )
+            .then((res) => {
+                const existingMovies = res.data;
+                const existingTitles = existingMovies.map(
+                    (movie) => movie.title
+                );
+                setExistingTitles(existingTitles);
+                console.log(existingTitles);
+            })
+            .catch((error) => {
+                console.error("Error fetching user movies:", error);
+            });
+    }, [titles, context?.user?.id]);
 
     const handleAddMovie = () => {
         console.log("added to the list");
@@ -55,16 +84,31 @@ const Discover = () => {
                                     {movie.vote_average}
                                 </div>
                                 <div className="card-actions flex justify-between items-center gap-11">
-                                    <button
-                                        onClick={handleAddMovie}
-                                        className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-mb-quartery transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                        data-ripple-dark="true"
-                                    >
-                                        <i
-                                            className="fas fa-heart text-lg leading-none"
-                                            title="Add to My List"
-                                        ></i>{" "}
-                                    </button>
+                                    {existingTitles?.includes(
+                                        movie?.original_title
+                                    ) ? (
+                                        <button
+                                            onClick={handleAddMovie}
+                                            className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-mb-quartery transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                            data-ripple-dark="true"
+                                        >
+                                            <i
+                                                className="fas fa-heart text-lg leading-none"
+                                                title="Add to My List"
+                                            ></i>{" "}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            onClick={handleAddMovie}
+                                            className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-gray-400 transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                            data-ripple-dark="true"
+                                        >
+                                            <i
+                                                className="fas fa-heart text-lg leading-none"
+                                                title="Add to My List"
+                                            ></i>{" "}
+                                        </button>
+                                    )}
                                     <Link
                                         to={`/movies/discover/${movie.id}`}
                                         className="text-mb-secondary hover:text-mb-quartery"

@@ -17,7 +17,6 @@ const RegularHeader = () => {
     const location = useLocation();
 
     const navigation = [
-        { name: "Movies", href: "/movies", current: true },
         { name: "My List", href: "/mylist", current: false },
     ];
     const updatedNavigation = navigation.map((item) => ({
