@@ -40,7 +40,7 @@ const Movies = () => {
 
     useEffect(() => {
         if (context.user) {
-            console.log(context.user);
+            // console.log(context.user);
             axios
                 .get(
                     `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
@@ -71,7 +71,7 @@ const Movies = () => {
                     >
                         MY LIST
                     </Link>
-                    <div className="flex card w-full shadow-xl text-white flex-wrap justify-center items-center my-3 gap-8 lg:hidden">
+                    <div className="flex card w-full shadow-xl text-white flex-wrap justify-center items-center my-3 gap-8 lg:hidden max-lg:pb-16">
                         {userMovies?.slice(0, 6).map((movie) => (
                             <div
                                 key={movie.id}
@@ -97,22 +97,21 @@ const Movies = () => {
                                                 {movie.vote_average}
                                             </div>
                                             <div className="card-actions flex justify-between items-center gap-11">
-                                                <button
-                                                    // onClick={handleAddMovie}
-                                                    className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-mb-quartery transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
-                                                    data-ripple-dark="true"
-                                                >
-                                                    <i
-                                                        className="fas fa-heart text-lg leading-none"
-                                                        title="Add to My List"
-                                                    ></i>{" "}
-                                                </button>
-                                                <Link
-                                                    to={`/movies/discover/${movie.id}`}
-                                                    className="text-mb-secondary hover:text-mb-quartery"
-                                                >
+                                                {context.user ? (
+                                                    <button
+                                                        // onClick={handleAddMovie}
+                                                        className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-mb-quartery transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+                                                        data-ripple-dark="true"
+                                                    >
+                                                        <i
+                                                            className="fas fa-heart text-lg leading-none"
+                                                            title="Add to My List"
+                                                        ></i>{" "}
+                                                    </button>
+                                                ) : null}
+                                                <p className="text-mb-secondary hover:text-mb-quartery">
                                                     See Details
-                                                </Link>
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -123,7 +122,7 @@ const Movies = () => {
                     <Swiper
                         effect={"coverflow"}
                         grabCursor={true}
-                        centeredSlides={true}
+                        centeredSlides={false}
                         slidesPerView={"auto"}
                         coverflowEffect={{
                             rotate: 50,
@@ -143,34 +142,33 @@ const Movies = () => {
                                     key={movie.id}
                                     className="swiper-slide"
                                 >
-                                    <Card
-                                        sx={{ maxWidth: 345 }}
-                                        className="slider-cards"
-                                    >
-                                        <CardMedia
-                                            sx={{ height: 340 }}
-                                            image={movie.poster}
-                                            title={movie.title}
-                                            className="card-img"
-                                        />
-                                        <CardContent>
-                                            <Typography
-                                                gutterBottom
-                                                variant="h5"
-                                                component="div"
-                                            >
-                                                {movie.title}
-                                            </Typography>
-                                        </CardContent>
-                                        <CardActions>
-                                            <Link
-                                                to={`/movies/${movie.id}`}
-                                                className=" px-3 text-md text-mb-secondary hover:text-mb-quartery"
-                                            >
-                                                See Details
-                                            </Link>
-                                        </CardActions>
-                                    </Card>
+                                    <Link to={`/movies/${movie.id}`}>
+                                        <Card
+                                            sx={{ maxWidth: 345 }}
+                                            className="slider-cards"
+                                        >
+                                            <CardMedia
+                                                sx={{ height: 340 }}
+                                                image={movie.poster}
+                                                title={movie.title}
+                                                className="card-img"
+                                            />
+                                            <CardContent>
+                                                <Typography
+                                                    gutterBottom
+                                                    variant="h5"
+                                                    component="div"
+                                                >
+                                                    {movie.title}
+                                                </Typography>
+                                            </CardContent>
+                                            <CardActions>
+                                                <p className=" px-3 text-md text-mb-secondary hover:text-mb-quartery">
+                                                    See Details
+                                                </p>
+                                            </CardActions>
+                                        </Card>
+                                    </Link>
                                 </SwiperSlide>
                             ))}
                     </Swiper>

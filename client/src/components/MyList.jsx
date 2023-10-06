@@ -42,10 +42,12 @@ const MyList = () => {
         if (selectedCategory === "ALL") {
             return movies; // Display all articles when "All" is selected
         } else {
-            return movies?.filter(
-                (movie) =>
-                    movie?.genre?.toLowerCase() ===
-                    selectedCategory.toLowerCase()
+            return movies?.filter((movie) =>
+                movie?.genre
+                    ?.replace(/[{}"]/g, "")
+                    ?.split(",")
+                    ?.map((genre) => genre?.toLowerCase().trim()) // Remove extra spaces and convert to lowercase
+                    .includes(selectedCategory?.toLowerCase())
             );
         }
     };
@@ -96,10 +98,10 @@ const MyList = () => {
             {movies.length > 0 ? (
                 <>
                     {" "}
-                    <div className=" bg-slate-800 pt-[150px] flex flex-col justify-center items-center gap-20 min-h-screen  pb-10 ">
-                        <div className="flex gap-4 items-center justify-center max-lg:flex-col-reverse ">
+                    <div className=" bg-slate-800 pt-[200px] flex flex-col justify-start items-center gap-20 min-h-screen  pb-10 ">
+                        <div className="flex gap-4 items-center justify-start max-lg:flex-col-reverse ">
                             <div
-                                className="flex  gap-4 relative"
+                                className="flex gap-4 relative"
                                 ref={dropdownRef}
                             >
                                 <button
@@ -237,6 +239,19 @@ const MyList = () => {
                                                 THRILLER
                                             </button>
                                         </li>
+                                        <li>
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full px-4 py-2 hover:bg-gray-100 "
+                                                onClick={() =>
+                                                    setSelectedCategory(
+                                                        "ADVENTURE"
+                                                    )
+                                                }
+                                            >
+                                                ADVENTURE
+                                            </button>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -256,45 +271,51 @@ const MyList = () => {
                                 </Button>
                             </div>
                         </div>
-                        <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center  gap-8 pb-20">
-                            {searchResults.map((movie) => (
-                                <div
-                                    key={movie.id}
-                                    className="w-64 h-[430px] bg-gray-100 rounded-xl overflow-hidden hover:scale-105 transition-all duration-200"
-                                >
-                                    <Link to={`/movies/discover/${movie.id}`}>
-                                        <figure className="h-2/3 overflow-hidden">
-                                            <img
-                                                src={movie.poster}
-                                                alt={movie.title}
-                                            />
-                                        </figure>
-                                        <div className="card-body h-1/3 px-3 text-black flex flex-col justify-between items-start">
-                                            <h2 className="card-title pt-2 text-lg font-medium text-slate-700 h-2/4">
-                                                {movie.title}
-                                            </h2>
-                                            <div className="h-2/4">
-                                                <div>
-                                                    <i
-                                                        className="fas fa-star text-yellow-400 text-lg mr-1 "
-                                                        title="Rating"
-                                                    ></i>
-                                                    {movie.rating}
-                                                </div>
-                                                <div className="card-actions flex justify-between items-center gap-11">
-                                                    <Link
-                                                        to={`/movies/${movie.id}`}
-                                                        className="text-mb-secondary hover:text-mb-quartery"
-                                                    >
-                                                        See Details
-                                                    </Link>
+                        {searchResults.length === 0 ? (
+                            <p className="text-white text-xl font-medium font-scada ">
+                                No movies match the selected category.
+                            </p>
+                        ) : (
+                            <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center  gap-8 pb-20">
+                                {searchResults.map((movie) => (
+                                    <div
+                                        key={movie.id}
+                                        className="w-64 h-[430px] bg-gray-100 rounded-xl overflow-hidden hover:scale-105 transition-all duration-200"
+                                    >
+                                        <Link to={`/movies/${movie.id}`}>
+                                            <figure className="h-2/3 overflow-hidden">
+                                                <img
+                                                    src={movie.poster}
+                                                    alt={movie.title}
+                                                />
+                                            </figure>
+                                            <div className="card-body h-1/3 px-3 text-black flex flex-col justify-between items-start">
+                                                <h2 className="card-title pt-2 text-lg font-medium text-slate-700 h-2/4">
+                                                    {movie.title}
+                                                </h2>
+                                                <div className="h-2/4">
+                                                    <div>
+                                                        <i
+                                                            className="fas fa-star text-yellow-400 text-lg mr-1 "
+                                                            title="Rating"
+                                                        ></i>
+                                                        {movie.rating}
+                                                    </div>
+                                                    <div className="card-actions flex justify-between items-center gap-11">
+                                                        <p
+                                                            to={`/movies/${movie.id}`}
+                                                            className="text-mb-secondary hover:text-mb-quartery"
+                                                        >
+                                                            See Details
+                                                        </p>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </Link>
-                                </div>
-                            ))}
-                        </div>
+                                        </Link>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                     <div className=" bg-slate-800 flex justify-around pb-24 pt-10">
                         <button

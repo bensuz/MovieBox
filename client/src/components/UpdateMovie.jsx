@@ -26,6 +26,7 @@ const UpdateMovie = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    console.log("update movie", movie);
     const handleSubmit = (e) => {
         e.preventDefault();
         axios

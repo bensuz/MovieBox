@@ -7,13 +7,14 @@ const pool = new Pool({
 
 // Define the User model
 class User {
-    constructor(id, firstName, lastName, email, userName, password) {
+    constructor(id, firstName, lastName, email, userName, password, avatar) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.userName = userName;
         this.password = password;
+        this.avatar = avatar;
     }
 
     static async createTable() {
@@ -24,7 +25,8 @@ class User {
                 last_name VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
                 user_name VARCHAR(255) NOT NULL,
-                password VARCHAR(255) NOT NULL
+                password VARCHAR(255) NOT NULL, 
+                avatar TEXT 
             );
         `;
 
@@ -39,8 +41,8 @@ class User {
 
     static async createUser(user) {
         const insertQuery = `
-            INSERT INTO users ("first_name", "last_name", "email", "user_name", "password")
-            VALUES ($1, $2, $3, $4, $5)
+            INSERT INTO users ("first_name", "last_name", "email", "user_name", "password", "avatar")
+            VALUES ($1, $2, $3, $4, $5, $6)
             RETURNING *;
         `;
 
@@ -51,6 +53,7 @@ class User {
                 user.email,
                 user.userName,
                 user.password,
+                user.avatar,
             ]);
             return new User(
                 rows[0].id,
@@ -58,7 +61,8 @@ class User {
                 rows[0].last_name,
                 rows[0].email,
                 rows[0].user_name,
-                rows[0].password
+                rows[0].password,
+                rows[0].avatar
             );
         } catch (error) {
             console.error("Error creating user:", error);

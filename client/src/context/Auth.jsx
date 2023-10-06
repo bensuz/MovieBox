@@ -13,7 +13,7 @@ export function useAuth() {
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    // const [uploading, setUploading] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const [errors, setErrors] = useState(null);
     const navigate = useNavigate();
 
@@ -68,26 +68,38 @@ const AuthProvider = ({ children }) => {
             setState(null, false, error.response.errors);
         }
     };
-    // const uploadAvatar = (formData) => {
-    //     setUploading(true);
-    //     console.log("this is for the formdata", formData);
-    //     axios
-    //         .post("/auth/upload-avatar", formData, {
-    //             headers: {
-    //                 "Content-Type": "multipart/form-data",
-    //             },
-    //         })
-    //         .then((res) => {
-    //             console.log("this is response.data for img upload", res.data);
+    const uploadAvatar = (formData) => {
+        setUploading(true);
+        console.log("this is for the formdata", formData);
+        axios
+            .post("api/auth/upload-avatar", formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((res) => {
+                console.log("this is response.data for img upload", res.data);
 
-    //             setUser({ ...user, avatar: res.data.user.avatar });
-    //             setUploading(false);
-    //         })
-    //         .catch((error) => {
-    //             console.log(error);
-    //             setUploading(false);
-    //         });
-    // };
+                setUser({ ...user, avatar: res.data.user.avatar });
+                setUploading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setUploading(false);
+            });
+    };
+
+    const deleteAvatar = () => {
+        axios
+            .delete("api/auth/delete-avatar") 
+            .then((res) => {
+                setUser({ ...user, avatar: null });
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -97,8 +109,9 @@ const AuthProvider = ({ children }) => {
                 login,
                 register,
                 logout,
-                // uploadAvatar,
-                // uploading,
+                uploadAvatar,
+                uploading,
+                deleteAvatar,
             }}
         >
             {children}

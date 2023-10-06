@@ -8,6 +8,7 @@ import Register from "./Register";
 import MyList from "./MyList";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
+import Profile from "./Profile";
 
 const Main = () => {
     return (
@@ -25,6 +26,7 @@ const Main = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<ProtectedRoute />}>
                     <Route path="/mylist" element={<MyList />} />
+                    <Route path="/profile" element={<Profile />} />
                 </Route>
             </Routes>
         </main>

@@ -3,12 +3,10 @@ import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/Auth";
 import { Link, Navigate } from "react-router-dom";
 import logo from "../assets/logo_new.png";
-import Lottie from "lottie-react";
-import animation1 from "../assets/animations/animation1.json";
-import animation2 from "../assets/animations/animation2.json";
-import animation3 from "../assets/animations/animation3.json";
+import Animations from "./Animations";
 
 function Login() {
+    window.scrollTo(0, 0);
     const context = useContext(AuthContext);
     // const navigate = Navigate();
     const [user, setUser] = useState({
@@ -33,64 +31,26 @@ function Login() {
         // navigate("/dashboard");
     };
 
-    useEffect(() => {
-        const animations = [animation1, animation2, animation3];
-
-        const interval = setInterval(() => {
-            // Change the current animation index to the next one in the array
-            const nextIndex = (currentAnimationIndex + 1) % animations.length;
-            setCurrentAnimationIndex(nextIndex);
-
-            // Set the paragraph text based on the current animation
-            if (nextIndex === 0) {
-                setParagraphText("Find Out About the Most Popular Movies");
-            } else if (nextIndex === 1) {
-                setParagraphText("Create Your Own Movie List");
-            } else {
-                setParagraphText("Enjoy the Extensive Movie Selection");
-            }
-        }, 5000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [currentAnimationIndex]);
-
     if (!context.loading && context.user) {
         return <Navigate to="/dashboard" />;
     }
 
     if (!context.loading && !context.user) {
-        const animations = [animation1, animation2, animation3];
-        const currentAnimation = animations[currentAnimationIndex];
         return (
             <section className=" w-full flex flex-col bg-[#222D5B] py-40  ">
-                <div className="py-5 px-5 flex item-center justify-center w-full">
-                    <div className="h-auto w-1/4 xl:w-1/4 bg-white rounded-l-3xl flex flex-col items-center justify-around p-10">
-                        <Lottie
-                            animationData={currentAnimation}
-                            loop={true}
-                            autoplay={true}
-                            className="w-1/2 "
-                            speed={1}
-                        />
-                        <p
-                            className={
-                                "font-poppins text-xl font-semibold animate-fade-left animate-infinite animate-duration-[5000ms] "
-                            }
-                        >
-                            {paragraphText}
-                        </p>
+                <div className="py-5 px-5 flex item-center justify-center w-full max-xl:flex-col max-xl:items-center max-xl:justify-center">
+                    <div className="h-auto w-1/4 xl:w-1/3 bg-white xl:rounded-l-3xl flex flex-col items-center justify-around p-10 max-xl:rounded-t-3xl max-xl:w-1/2 max-xl:min-h-[500px] max-lg:w-[483px] max-sm:w-[350px] max-sm:min-h-[400px]">
+                        <Animations />
                     </div>
 
-                    <div className="h-auto w-1/3 xl:w-1/4 bg-slate-400 rounded-r-3xl flex flex-col items-center justify-around ">
+                    <div className="h-auto w-1/3 xl:w-1/3 bg-slate-400 xl:rounded-r-3xl flex flex-col items-center justify-around max-xl:rounded-b-3xl max-xl:w-1/2 max-lg:w-[483px] max-sm:w-[350px] max-lg:pb-20">
                         {/* Left column container */}
                         <div className="px-4 md:px-0 lg:w-full flex flex-col justify-center items-center">
                             <div className="md:mx-6 md:p-12 w-full">
                                 {/* Logo */}
                                 <div className="text-center w-full">
                                     <img
-                                        className="mx-auto w-32 h-auto"
+                                        className="mx-auto w-32 max-md:w-24 max-md:mt-8 h-auto"
                                         src={logo}
                                         alt="logo"
                                     />
@@ -150,12 +110,12 @@ function Login() {
                                         </label>
                                     </div>
                                     <div className="p-10 mt-7 text-mb-secondary">
-                                        <button className="bg-white text-mb-secondary font-bold text-sm border-none rounded-xl h-10 w-54 lg:h-10 lg:w-56 lg:text-lg">
+                                        <button className="bg-white text-mb-secondary font-bold max-xl:text-md border-none rounded-xl h-10 w-44 lg:h-10 lg:w-48 xl:text-lg  shadow-slate-600 hover:shadow-lg hover:shadow-slate-700 shadow-inner">
                                             Log In
                                         </button>
                                     </div>
                                     <div className="flex flex-wrap justify-center align-center gap-2">
-                                        <p>Don't have an account yet?</p>
+                                        <p>Don&apos;t have an account yet?</p>
                                         <Link
                                             className="text-mb-quartery font-bold"
                                             to="/register"

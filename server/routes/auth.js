@@ -14,4 +14,8 @@ router.get("/currentUser", authenticate, authController.getLoggedInUser);
 // User Logout Route
 router.post("/logout", authController.logOut);
 
+router.get("/avatar", authenticate, authController.getAvatar);
+router.post("/upload-avatar", authenticate, authController.updateAvatar);
+router.delete("/delete-avatar", authenticate, authController.deleteAvatar);
+
 module.exports = router;

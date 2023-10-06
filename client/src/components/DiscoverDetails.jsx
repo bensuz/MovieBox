@@ -1,26 +1,28 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
-import YouTube from "react-youtube";
 
 const DiscoverDetails = () => {
     const { id } = useParams();
-
+    const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [movie, setMovie] = useState(null);
     const [title, setTitle] = useState("");
-    const [genre, setGenre] = useState("");
-    const [date, setDate] = useState("");
+    const [genres, setGenres] = useState([]);
     const [rating, setRating] = useState("");
     const [poster, setPoster] = useState("");
     const [overview, setOverview] = useState("");
     const [language, setLanguage] = useState("");
     const context = useContext(AuthContext);
     const [trailers, setTrailers] = useState([]);
+    const [userMovies, setUserMovies] = useState(null);
+    const [movieExists, setMovieExists] = useState(false);
+    const [userMovieId, setUserMovieId] = useState(null);
 
+    //fetching public movies from tmdb
     useEffect(() => {
         window.scrollTo(0, 0);
         const fetchMovie = async () => {
@@ -32,8 +34,7 @@ const DiscoverDetails = () => {
                 );
                 setMovie(response.data);
                 setTitle(response.data.title);
-                setGenre(response.data?.genres[0]?.name);
-                setDate(response.data.release_date);
+                setGenres(response.data.genres.map((genre) => genre.name));
                 setRating(parseFloat(response.data.vote_average));
                 setPoster(
                     `https://image.tmdb.org/t/p/original/${response.data.poster_path}`
@@ -51,35 +52,39 @@ const DiscoverDetails = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    //fetching trailers from youtube data api
     useEffect(() => {
         const fetchTrailers = async () => {
             try {
-                // Make a request to the YouTube Data API to get trailers based on the movie title
-                const response = await axios.get(
-                    "https://www.googleapis.com/youtube/v3/search",
-                    {
-                        params: {
-                            key: "AIzaSyDJKInCL6Q5UmkNOaacpQkvQA6cj5gO8E0", // Replace with your YouTube API key
-                            q: `${title} official trailer`, // Search for official trailers
-                            part: "snippet",
-                            type: "video",
-                            maxResults: 3, // You can adjust this number
-                        },
-                    }
-                );
+                if (trailers.length === 0) {
+                    // Make a request to the YouTube Data API to get trailers based on the movie title
+                    const response = await axios.get(
+                        "https://www.googleapis.com/youtube/v3/search",
+                        {
+                            params: {
+                                key: import.meta.env.VITE_YOUTUBE_API_KEY,
+                                q: `${title} official trailer`,
+                                part: "snippet",
+                                type: "video",
+                                maxResults: 1,
+                            },
+                        }
+                    );
 
-                // Extract the video IDs from the API response
-                const trailerIds = response.data.items.map(
-                    (item) => item.id.videoId
-                );
+                    // Extract the video IDs from the API response
+                    const trailerIds = response.data.items.map(
+                        (item) => item.id.videoId
+                    );
 
-                // Construct the YouTube video URLs
-                const trailerUrls = trailerIds.map(
-                    (videoId) => `https://www.youtube.com/watch?v=${videoId}`
-                );
+                    // Construct the YouTube video URLs
+                    const trailerUrls = trailerIds.map(
+                        (videoId) =>
+                            `https://www.youtube.com/watch?v=${videoId}`
+                    );
 
-                // Set the trailers state variable with the video URLs
-                setTrailers(trailerUrls);
+                    // Set the trailers state variable with the video URLs
+                    setTrailers(trailerUrls);
+                }
             } catch (error) {
                 console.error("Error fetching trailers:", error);
             }
@@ -88,11 +93,11 @@ const DiscoverDetails = () => {
         fetchTrailers(); // Call the fetchTrailers function
     }, [title]);
     const videoId = trailers[0]?.split("v=")[1];
-    console.log(trailers);
-    const handleAddMyList = () => {
-        // Make a POST request to your server with the movie data
 
-        const ratingInt = parseInt(rating);
+    //fetching user movies to compare to see if the tmdb movie is already on the list
+
+    if (context.user) {
+        console.log(context.user);
         axios
             .get(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
@@ -100,52 +105,90 @@ const DiscoverDetails = () => {
                 }`
             )
             .then((res) => {
-                const existingMovies = res.data;
-                const movieExists = existingMovies.some(
+                const matchingUserMovie = res.data.find(
                     (movie) => movie.title === title
                 );
 
-                if (movieExists) {
-                    // Display a message indicating that the movie already exists
-                    Swal.fire({
-                        icon: "warning",
-                        title: "Movie Already Exists",
-                        text: "This movie is already in your list.",
-                    });
-                } else {
-                    axios
-                        .post(
-                            `${
-                                import.meta.env.VITE_SERVER_BASE_URL
-                            }/api/usermovies`,
-                            {
-                                user_id: context.user.id,
-                                title,
-                                genre,
-                                date,
-                                ratingInt,
-                                language,
-                                poster,
-                                overview,
-                            }
-                        )
-                        .then((res) => {
-                            Swal.fire({
-                                position: "top-end",
-                                icon: "success",
-                                title: "Movie has been added to My List",
-                                showConfirmButton: false,
-                                timer: 1500,
-                            });
-                            console.log("Movie added to the list:", res.data);
-                        })
-                        .catch((e) => console.log(e));
+                if (matchingUserMovie) {
+                    setUserMovieId(matchingUserMovie?.id);
+                    setMovieExists(true);
                 }
+            })
+            .catch((e) => console.log(e));
+    }
+
+    //adding movie to the list if not already exists
+    const handleAddMyList = () => {
+        const ratingFloat = parseFloat(rating).toFixed(1);
+
+        if (movieExists) {
+            // Display a message indicating that the movie already exists
+            Swal.fire({
+                icon: "warning",
+                title: "Movie Already Exists",
+                text: "This movie is already in your list.",
+            });
+        } else {
+            axios
+                .post(
+                    `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`,
+                    {
+                        user_id: context.user.id,
+                        title,
+                        genres,
+                        reversedDate,
+                        ratingFloat,
+                        language,
+                        poster,
+                        overview,
+                    }
+                )
+                .then((res) => {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Movie has been added to My List",
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    setMovieExists(true);
+                    // console.log("Movie added to the list:", res.data);
+                })
+                .catch((e) => console.log(e));
+        }
+    };
+
+    const deleteFromMyList = () => {
+        axios
+            .delete(
+                `${
+                    import.meta.env.VITE_SERVER_BASE_URL
+                }/api/usermovies/details/${userMovieId}`
+            )
+            // eslint-disable-next-line no-unused-vars
+            .then((res) => {
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert this!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete it!",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            "Deleted!",
+                            "Movie has been deleted from My List.",
+                            "success"
+                        );
+                        navigate("/");
+                    }
+                });
             })
             .catch((e) => console.log(e));
     };
 
-    console.log(trailers[0]);
     const backgroundImageStyle = movie
         ? {
               backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`,
@@ -165,6 +208,20 @@ const DiscoverDetails = () => {
         day: "numeric",
     });
 
+    const releaseDateForPg = releaseDate
+        .toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "numeric",
+            day: "numeric",
+        })
+        .replace(/\//g, "-");
+    const parts = releaseDateForPg.split("-");
+    const reversedDate = `${parts[2]}-${parts[0]}-${parts[1]}`;
+
+    const handleLoginClick = () => {
+        navigate("/login");
+    };
+
     return (
         <>
             <div
@@ -180,15 +237,15 @@ const DiscoverDetails = () => {
                     <>
                         {" "}
                         <div className="z-10 flex max-xl:flex-col  rounded-l-xl  max-xl:rounded-t-xl shadow-xl shadow-slate-500  w-5/6 text-white">
-                            <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3">
+                            <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3 xl:w-1/2">
                                 <img
                                     src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
                                     alt=""
                                     className="xl:rounded-l-xl max-xl:rounded-t-xl shadow-2xl shadow-gray-400 w-full"
                                 />
                             </div>
-                            <div className=" font- min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
-                                <h2 className="text-6xl xl:pt-20 font-medium uppercase max-md:text-4xl">
+                            <div className="font-scada xl:w-1/2 min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center max-xl:py-14 bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
+                                <h2 className="text-6xl xl:pt-20 font-medium max-sm:text-center uppercase max-md:text-4xl">
                                     {movie?.title}
                                 </h2>
                                 <div className="flex items-center gap-4 max-sm:gap-1 pt-2 ">
@@ -237,17 +294,12 @@ const DiscoverDetails = () => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="youtube-container w-[600px]">
-                                            <YouTube
-                                                videoId={videoId}
-                                                className="aspect-w-16 aspect-h-9"
-                                                opts={{
-                                                    height: "auto",
-                                                    width: "full",
-                                                    playerVars: {
-                                                        autoplay: 0,
-                                                    },
-                                                }}
+                                        <div className="2xl:max-w-[550px] 2xl:h-[400px] xl:max-w-[450px] xl:h-[300px]  max-xl:self-center lg:w-[500px] lg:h-[350px] max-lg:w-[350px] max-lg:h-[250px] max-sm:w-[200px] max-sm:h-[150px] rounded-xl shadow-md shadow-gray-600 overflow-hidden aspect-w-16 aspect-h-9 ">
+                                            <iframe
+                                                src={`https://www.youtube.com/embed/${videoId}`}
+                                                title="YouTube Video"
+                                                className="w-full h-full"
+                                                allowFullScreen
                                             />
                                         </div>
                                         <div>
@@ -255,16 +307,42 @@ const DiscoverDetails = () => {
                                                 {movie?.overview}
                                             </p>
                                         </div>
-                                        <button
-                                            onClick={handleAddMyList}
-                                            className="border rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end mr-10 max-xl:self-center xl:mr-24 "
-                                        >
-                                            <i
-                                                className="fas fa-heart text-lg leading-none mr-3"
-                                                title="Add to My List"
-                                            ></i>{" "}
-                                            Add to My List
-                                        </button>
+                                        {context.user ? (
+                                            !movieExists ? (
+                                                <button
+                                                    onClick={handleAddMyList}
+                                                    className="border rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end mr-10 max-xl:self-center xl:mr-24 "
+                                                >
+                                                    <i
+                                                        className="fas fa-heart text-lg leading-none mr-3"
+                                                        title="Add to My List"
+                                                    ></i>{" "}
+                                                    Add to My List
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={deleteFromMyList}
+                                                    className="border rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end mr-10 max-xl:self-center xl:mr-24 "
+                                                >
+                                                    <i
+                                                        className="fas fa-trash-can text-lg leading-none mr-3"
+                                                        title="Remove from My List"
+                                                    ></i>{" "}
+                                                    Remove From My List
+                                                </button>
+                                            )
+                                        ) : (
+                                            <button
+                                                onClick={handleLoginClick}
+                                                className="border rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end mr-10 max-xl:self-center xl:mr-24 "
+                                            >
+                                                <i
+                                                    className="fas  fa-right-to-bracket text-lg leading-none mr-2"
+                                                    title="Add to My List"
+                                                ></i>{" "}
+                                                Login to add to your list
+                                            </button>
+                                        )}
                                     </div>
                                 </div>
                             </div>

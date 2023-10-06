@@ -4,6 +4,8 @@ const jwt = require("jsonwebtoken");
 const SECRET = process.env.JWT_SECRET;
 const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
 const db = require("../config/db");
+const upload = require("../config/multer");
+const cloudinary = require("../config/cloudinary");
 
 const { Pool } = require("pg");
 const pool = new Pool({
@@ -140,9 +142,108 @@ const logOut = (req, res) => {
     res.json({ message: "User logged out" });
 };
 
+const getAvatar = async (req, res) => {
+    try {
+        const { userName } = req.user;
+        const user = await pool.query(
+            'SELECT * FROM users WHERE "user_name" = $1',
+            [userName]
+        );
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Send the avatar URL in the response
+        res.status(200).json({ avatarUrl: user.avatar });
+    } catch (error) {
+        res.status(500).json({ message: error.message, errors: error.errors });
+    }
+};
+
+const deleteAvatar = async (req, res) => {
+    try {
+        const { userName } = req.user;
+
+        const updatedUser = await pool.query(
+            "UPDATE users SET avatar = NULL WHERE user_name = $1",
+            [userName]
+        );
+        res.status(200).json({
+            message: "Avatar deleted successfully",
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Avatar deletion failed",
+            error: error.message,
+        });
+    }
+};
+
+const updateAvatar = async (req, res) => {
+    try {
+        const { userName } = req.user;
+        upload.single("avatar")(req, res, async (err) => {
+            if (err) {
+                return res
+                    .status(400)
+                    .json({ message: "Avatar upload failed", error: err });
+            }
+
+            try {
+                // Upload the image to Cloudinary
+                const result = await cloudinary.uploader.upload(req.file.path);
+
+                if (!result || !result.secure_url) {
+                    return res.status(500).json({
+                        message: "Cloudinary upload failed",
+                        error: "Invalid response from Cloudinary",
+                    });
+                }
+
+                // Update the user's avatar URL in the database
+
+                const updatedUser = await pool.query(
+                    "UPDATE users SET avatar = $1 WHERE user_name = $2 RETURNING *",
+                    [result.secure_url, userName]
+                );
+
+                if (!updatedUser.rows[0]) {
+                    return res.status(404).json({ message: "User not found" });
+                }
+
+                // Set the userAvatar cookie (if needed)
+                res.cookie("userAvatar", result.secure_url, {
+                    httpOnly: true,
+                    expires: new Date(Date.now() + oneDayInMilliseconds),
+                });
+
+                res.status(200).json({
+                    message: "Avatar uploaded successfully",
+                    user: updatedUser.rows[0],
+                });
+            } catch (cloudinaryError) {
+                console.error("Cloudinary upload error:", cloudinaryError);
+                res.status(500).json({
+                    message: "Cloudinary upload failed",
+                    error: cloudinaryError.message,
+                });
+            }
+        });
+    } catch (error) {
+        console.error("Avatar upload error:", error);
+        res.status(500).json({
+            message: "Avatar upload failed",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     register,
     login,
     logOut,
     getLoggedInUser,
+    getAvatar,
+    deleteAvatar,
+    updateAvatar,
 };

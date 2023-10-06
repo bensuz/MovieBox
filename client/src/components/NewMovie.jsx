@@ -43,23 +43,6 @@ const NewMovie = () => {
             });
             return;
         }
-        // axios
-        // .post(`${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`, {
-        //     user_id: context.user.id,
-        //     title,
-        //     genre,
-        //     releaseDate: parsedReleaseDate,
-        //     rating: numericRating,
-        //     language,
-        //     poster,
-        //     overview,
-        // })
-        // .then((res) => {
-        //     console.log(res.data);
-
-        //     navigate("/");
-        // })
-        // .catch((e) => console.log(e));
         axios
             .get(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${

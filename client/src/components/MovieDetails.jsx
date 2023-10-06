@@ -8,6 +8,7 @@ const MovieDetails = () => {
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [movie, setMovie] = useState(null);
+    const [genres, setGenres] = useState([]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -17,11 +18,18 @@ const MovieDetails = () => {
                     import.meta.env.VITE_SERVER_BASE_URL
                 }/api/usermovies/details/${id}`
             )
-            .then((res) => setMovie(res.data))
+            .then((res) => {
+                setMovie(res.data);
+                const genresArray = res.data.genre
+                    .replace(/[{}]/g, "")
+                    .split(",");
+                setGenres(genresArray);
+            })
             .catch((e) => setError(e.response?.data?.message));
     }, []);
+    const genresWithoutQuotes = genres.map((genre) => genre.replace(/"/g, ""));
+    // console.log("for movie details page", movie);
 
-    console.log("for movie details page", movie);
     const handleDelete = () => {
         axios
             .delete(
@@ -65,13 +73,12 @@ const MovieDetails = () => {
         backdropFilter: "blur(10px)",
     };
 
-    const releaseDate = new Date(movie?.year);
+    const releaseDate = new Date(movie?.release_date);
     const formattedReleaseDate = releaseDate.toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
     });
-
     return (
         <>
             <div
@@ -87,25 +94,32 @@ const MovieDetails = () => {
                     <>
                         {" "}
                         <div className="z-10 flex max-xl:flex-col  rounded-l-xl  max-xl:rounded-t-xl shadow-xl shadow-slate-500  w-5/6 text-white">
-                            <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3">
+                            <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3 xl:w-1/2">
                                 <img
                                     src={`${movie.poster}`}
                                     alt=""
                                     className="xl:rounded-l-xl max-xl:rounded-t-xl shadow-2xl shadow-gray-400 w-full"
                                 />
                             </div>
-                            <div className=" font-scada  min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
+                            <div className=" font-scada  xl:w-1/2 min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
                                 <h2 className="text-6xl xl:pt-20 font-medium uppercase max-md:text-4xl">
                                     {movie?.title}
                                 </h2>
-                                {movie.genre && (
+                                {genresWithoutQuotes.length > 0 && (
                                     <div className="flex items-center gap-4 max-sm:gap-1 pt-2 ">
-                                        <p className="text-lg max-md:text-sm font-thin p-2 uppercase">
-                                            {movie?.genre}
-                                        </p>
+                                        {genresWithoutQuotes.map(
+                                            (genre, index) => (
+                                                <p
+                                                    key={index}
+                                                    className="text-lg max-md:text-sm font-thin p-2 uppercase"
+                                                >
+                                                    {genre}
+                                                </p>
+                                            )
+                                        )}
                                     </div>
                                 )}
-                                <div className="flex justify-start items-start max-xl:w-full max-xl:">
+                                <div className="flex justify-start items-start max-xl:w-full ">
                                     <div className="w-full flex flex-col gap-16 max-xl:w-full max-xl:p-2">
                                         <div className=" flex justify-start items-center max-sm:gap-2 gap-12 max-xl:self-center max-xl:gap-10">
                                             <div className="flex justify-start items-center">
@@ -114,7 +128,7 @@ const MovieDetails = () => {
                                                     title="Rating"
                                                 ></i>
                                                 <p className="text-lg font-thin p-2 max-md:text-sm ">
-                                                    {movie.release_date}
+                                                    {formattedReleaseDate}
                                                 </p>
                                             </div>
                                             <div className="flex justify-start items-center">
