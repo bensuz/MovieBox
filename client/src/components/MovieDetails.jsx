@@ -119,7 +119,7 @@ const MovieDetails = () => {
                                         )}
                                     </div>
                                 )}
-                                <div className="flex justify-start items-start max-xl:w-full ">
+                                <div className="flex justify-start items-start max-2xl:w-full ">
                                     <div className="w-full flex flex-col gap-16 max-xl:w-full max-xl:p-2">
                                         <div className=" flex justify-start items-center max-sm:gap-2 gap-12 max-xl:self-center max-xl:gap-10">
                                             <div className="flex justify-start items-center">

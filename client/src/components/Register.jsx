@@ -255,7 +255,7 @@ const Register = () => {
                 closeOnDocumentClick
                 onClose={closePopup}
             >
-                <div className="w-[900px] flex flex-col items-start justify-start p-6 gap-2 text-justify h-[600px] overflow-scroll ">
+                <div className=" flex flex-col items-start justify-start p-6 gap-2 text-justify h-[600px] overflow-scroll w-fit max-lg:text-xs lg:text-sm max-lg:py-2 max-lg:text-start max-lg:overflow-y-scroll">
                     <h1 className="font-bold self-center ">
                         Terms and Conditions
                     </h1>
@@ -278,14 +278,14 @@ const Register = () => {
                         The use of this website is subject to the following
                         terms of use:
                     </p>
-                    <ul className="list-disc pl-12 flex flex-col gap-4">
-                        <li className="pl-2">
+                    <ul className="list-disc pl-12 flex flex-col gap-4 max-lg:pl-0">
+                        <li className="pl-2 max-lg:pl-0">
                             This website uses cookies to monitor browsing
                             preferences. If you do allow cookies to be used, the
                             following personal information may be stored by us
                             for use by third parties: e-mail.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Neither we nor any third parties provide any
                             warranty or guarantee as to the accuracy,
                             timeliness, performance, completeness or suitability
@@ -296,7 +296,7 @@ const Register = () => {
                             exclude liability for any such inaccuracies or
                             errors to the fullest extent permitted by law.
                         </li>{" "}
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Your use of any information or materials on this
                             website is entirely at your own risk, for which we
                             shall not be liable. It shall be your own
@@ -304,7 +304,7 @@ const Register = () => {
                             or information available through this website meet
                             your specific requirements.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             This website contains material which is owned by or
                             licensed to us. This material includes, but is not
                             limited to, the design, layout, look, appearance and
@@ -312,16 +312,16 @@ const Register = () => {
                             accordance with the copyright notice, which forms
                             part of these terms and conditions.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             All trade marks reproduced in this website which are
                             not the property of, or licensed to, the operator
                             are acknowledged on the website.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Unauthorised use of this website may give rise to a
                             claim for damages and/or be a criminal offence.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             From time to time this website may also include
                             links to other websites. These links are provided
                             for your convenience to provide further information.
@@ -329,7 +329,7 @@ const Register = () => {
                             We have no responsibility for the content of the
                             linked website(s).
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Your use of this website and any dispute arising out
                             of such use of the website is subject to the laws of
                             England, Northern Ireland, Scotland and Wales.
@@ -342,7 +342,7 @@ const Register = () => {
                 closeOnDocumentClick
                 onClose={closePopup}
             >
-                <div className="w-[900px] flex flex-col items-start justify-start p-6 gap-2 text-justify h-[600px] overflow-scroll ">
+                <div className="flex flex-col items-start justify-start p-6 gap-2 text-justify h-[600px] overflow-scroll w-fit max-lg:text-xs lg:text-sm max-lg:py-2 max-lg:text-start max-lg:overflow-y-scroll">
                     <h1 className="font-bold self-center ">Provacy Notice</h1>
                     <p className="">
                         This website is operated by MovieBox and whose
@@ -368,8 +368,8 @@ const Register = () => {
                         personal information about individuals who visit and use
                         our website:
                     </p>
-                    <ul className="list-disc pl-12 flex flex-col gap-4">
-                        <li className="pl-2">
+                    <ul className="list-disc pl-12 flex flex-col gap-4 max-lg:pl-0">
+                        <li className="pl-2 max-lg:pl-0">
                             Information you supply to us. You may supply us with
                             information about you by filling in forms on our
                             website. This includes information you provide when
@@ -377,7 +377,7 @@ const Register = () => {
                             you give us may include your name, address, e-mail
                             address and phone number.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Information our website automatically collects about
                             you. With regard to each of your visits to our
                             website we may automatically collect information
@@ -391,7 +391,7 @@ const Register = () => {
                             length of visit, what you click on, documents
                             downloaded and download errors.
                         </li>{" "}
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Our website uses cookies to distinguish you from
                             other users of our website. This helps us to provide
                             you with a good experience when you browse our
@@ -399,7 +399,7 @@ const Register = () => {
                             detailed information on the cookies we use and the
                             purposes for which we use them see our Cookie Policy
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             We will use information you supply to us: to provide
                             you with information and/or services that you
                             request from us; to administer our site including
@@ -409,7 +409,7 @@ const Register = () => {
                             security and debugging as part of our efforts to
                             keep our site safe and secure.
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             You have the right to ensure that your personal data
                             is being processed lawfully (“Subject Access
                             Right”). Your subject access right can be exercised
@@ -425,7 +425,7 @@ const Register = () => {
                             complain to the Information Commissioners Office
                             (ICO).
                         </li>
-                        <li className="pl-2">
+                        <li className="pl-2 max-lg:pl-0">
                             Any changes we may make to our privacy policy in the
                             future will be posted on this page and, where
                             appropriate, notified to you by e-mail. Please check

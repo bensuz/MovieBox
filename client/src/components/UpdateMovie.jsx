@@ -3,13 +3,18 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import GenreSelection from "./GenreSelection";
+import LanguageSelection from "./LanguageSelection";
 
 const UpdateMovie = () => {
     const { id } = useParams();
-    console.log(id);
+    // console.log(id);
     const navigate = useNavigate();
     const [movie, setMovie] = useState();
     const [error, setError] = useState();
+    const [selectedGenres, setSelectedGenres] = useState([]);
+    const [selectedLanguage, setSelectedLanguage] = useState("");
+    const [parsedGenre, setParsedGenre] = useState();
 
     useEffect(() => {
         axios
@@ -20,13 +25,19 @@ const UpdateMovie = () => {
             )
             .then((res) => {
                 setMovie(res.data);
-                console.log(res.data);
+                const genreNow = res.data.genre;
+                const validJsonGenre = genreNow
+                    .replace(/^{/, "[")
+                    .replace(/}$/, "]");
+                setParsedGenre(JSON.parse(validJsonGenre));
+
+                console.log("parsed genre", JSON.parse(validJsonGenre));
             })
             .catch((e) => setError(e.response?.data?.message));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [id]);
 
-    console.log("update movie", movie);
+    // console.log("update movie", movie);
     const handleSubmit = (e) => {
         e.preventDefault();
         axios
@@ -52,6 +63,12 @@ const UpdateMovie = () => {
         setMovie({ ...movie, [name]: value });
     };
 
+    const handleGenreChange = (selectedGenres) => {
+        setSelectedGenres(selectedGenres);
+    };
+    const handleLanguageChange = (selectedLanguage) => {
+        setSelectedLanguage(selectedLanguage);
+    };
     return (
         <>
             <div className=" h-[740px]">
@@ -85,19 +102,17 @@ const UpdateMovie = () => {
                         </div>
                         <div className="relative h-10 w-full min-w-[200px] ">
                             <label
-                                htmlFor="director"
+                                htmlFor="genre"
                                 className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[14px] font-normal leading-tight text-slate-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t-2 before:border-slate-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t-2 after:border-r-2 after:border-slate-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-slate-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-mb-quartery peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-mb-quartery peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-mb-quartery peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-slate-500"
                             >
                                 Genre
                             </label>
-                            <input
-                                type="text"
-                                name="genre"
-                                value={movie?.genre || ""}
-                                onChange={handleChange}
-                                className=" peer h-full w-full rounded-[7px] border-2 border-slate-500 border-t-transparent bg-transparent px-5 py-6 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-2 placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-mb-quartery focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                                placeholder=" "
-                            />
+                            <div className=" peer h-full w-full rounded-[7px] border-2 border-slate-500 border-t-transparent bg-transparent px-5 py-6 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-2 placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-mb-quartery focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+                                <GenreSelection
+                                    onGenreChange={handleGenreChange}
+                                    parsedGenre={parsedGenre}
+                                />
+                            </div>
                         </div>
                         <div className="relative h-10 w-full min-w-[200px]">
                             <label
@@ -107,7 +122,7 @@ const UpdateMovie = () => {
                                 Release Date
                             </label>
                             <input
-                                type="text"
+                                type="date"
                                 name="releaseDate"
                                 value={movie?.release_date || ""}
                                 onChange={handleChange}
@@ -123,7 +138,10 @@ const UpdateMovie = () => {
                                 Rating
                             </label>
                             <input
-                                type="text"
+                                type="number"
+                                max="10"
+                                min="0.1"
+                                step="0.1"
                                 name="rating"
                                 value={movie?.rating || ""}
                                 onChange={handleChange}
@@ -138,14 +156,12 @@ const UpdateMovie = () => {
                             >
                                 Language
                             </label>
-                            <input
-                                type="text"
-                                name="language"
-                                value={movie?.language || ""}
-                                onChange={handleChange}
-                                className=" peer h-full w-full rounded-[7px] border-2 border-slate-500 border-t-transparent bg-transparent px-5 py-6 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-2 placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-mb-quartery focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
-                                placeholder=" "
-                            />
+                            <div className=" peer h-full w-full rounded-[7px] border-2 border-slate-500 border-t-transparent bg-transparent px-5 py-6 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-2 placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-mb-quartery focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50">
+                                <LanguageSelection
+                                    onLanguageChange={handleLanguageChange}
+                                    language={movie?.language}
+                                />
+                            </div>
                         </div>
                         <div className="relative h-10 w-full min-w-[200px]">
                             <label
@@ -155,7 +171,7 @@ const UpdateMovie = () => {
                                 Poster URL
                             </label>
                             <input
-                                type="text"
+                                type="url"
                                 name="poster"
                                 value={movie?.poster || ""}
                                 onChange={handleChange}

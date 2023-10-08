@@ -12,6 +12,7 @@ const RegularHeader = () => {
     const context = useContext(AuthContext);
 
     const [menuOpen, setMenuOpen] = useState(false);
+    const [isNotificationVisible, setIsNotificationVisible] = useState(true);
 
     const handleLogout = () => {
         console.log("CONTEXT", context);
@@ -94,14 +95,27 @@ const RegularHeader = () => {
                                             className="relative ml-3"
                                         >
                                             <div>
-                                                <Menu.Button className="relative rounded-full bg-mb-quartery p-1 text-mb-primary hover:text-white focus:outline-[#8C1960] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#8C1960] max-[400px]:hidden">
+                                                <Menu.Button
+                                                    onClick={() =>
+                                                        setIsNotificationVisible(
+                                                            false
+                                                        )
+                                                    }
+                                                    className="relative mr-2 rounded-full bg-mb-quartery p-1 text-mb-primary hover:text-white focus:outline-[#8C1960] focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#8C1960] max-[400px]:hidden"
+                                                >
                                                     <span className="sr-only">
                                                         View notifications
                                                     </span>
+
                                                     <BellIcon
                                                         className="md:w-6 md:h-6 w-4 h-4"
                                                         aria-hidden="true"
                                                     />
+                                                    {isNotificationVisible && (
+                                                        <div className="absolute inline-flex items-center justify-center w-5 h-5 text-xs font-bold text-mb-quartery bg-white border-2 border-white rounded-full top-4 -right-3 dark:border-gray-900 max-md:w-4 max-md:h-4">
+                                                            1
+                                                        </div>
+                                                    )}
                                                 </Menu.Button>
                                             </div>
                                             <Transition
@@ -113,7 +127,7 @@ const RegularHeader = () => {
                                                 leaveFrom="transform opacity-100 scale-100"
                                                 leaveTo="transform opacity-0 scale-95"
                                             >
-                                                <Menu.Items className="absolute  right-0 z-10 mt-4  origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none w-[400px]">
+                                                <Menu.Items className="absolute  right-0 z-10 mt-4  origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none w-[400px] max-[550px]:w-[250px]">
                                                     <Menu.Item>
                                                         <p className="block border-b border-gray-200 px-4 py-2 text-md font-bold  text-mb-quartery mx-1 rounded-md ">
                                                             One new
@@ -123,7 +137,7 @@ const RegularHeader = () => {
                                                     <Menu.Item>
                                                         <Link
                                                             to="movies/discover/1151534"
-                                                            className="block h-[300px] w-full overflow-hidden border-b border-gray-200 px-4 py-2 text-sm text-gray-700 mx-1 rounded-md  hover:bg-mb-primary  hover:text-mb-secondary"
+                                                            className="block h-[300px] w-full overflow-hidden border-b border-gray-200 px-4 py-2 text-sm text-gray-700 mx-1 rounded-md  hover:bg-mb-primary  hover:text-mb-secondary "
                                                         >
                                                             <p>
                                                                 Check out this

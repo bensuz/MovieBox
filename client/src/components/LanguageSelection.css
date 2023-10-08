@@ -1,0 +1,18 @@
+.react-select-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    border: none;
+}
+
+.react-select__control {
+    border: none;
+    outline: none;
+    background-color: blueviolet;
+}
+
+.react-select__control:focus {
+    border: none;
+    outline: none;
+}
