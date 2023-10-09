@@ -54,12 +54,11 @@ const Discover = () => {
                     console.error("Error fetching user movies:", error);
                 });
         }
-    }, [titles, context.user]);
+    }, []);
 
     const handleAddMovie = () => {
         console.log("added to the list");
     };
-
     return (
         <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center my-3 gap-8 pb-20 ">
             {publicMovies.map((movie) => (

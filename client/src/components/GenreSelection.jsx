@@ -1,5 +1,6 @@
 import "./GenreSelection.css";
 import chroma from "chroma-js";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 
 const GenreSelection = ({ onGenreChange, parsedGenre }) => {
@@ -27,7 +28,17 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
         { value: "muscial", label: "Musical", color: "#253858" },
         { value: "western", label: "Western", color: "#896542" },
         { value: "crime", label: "Chrime", color: "#784569" },
+        {
+            value: "action",
+            label: "Action",
+            color: "#00B8D9",
+        },
     ];
+
+    let defaultValue = genreOptions.filter((option) =>
+        parsedGenre.includes(option.label)
+    );
+    console.log(defaultValue);
 
     const colourStyles = {
         control: (base) => ({
@@ -86,19 +97,11 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
             },
         }),
     };
-    console.log(parsedGenre);
-    const defaultValue =
-        parsedGenre &&
-        parsedGenre.map((value) => {
-            const option = genreOptions.find(
-                (option) => option.value === value
-            );
-            return option || null;
-        });
+
     return (
         <Select
             closeMenuOnSelect={false}
-            defaultValue={defaultValue?.filter((item) => item !== null)}
+            defaultValue={defaultValue}
             isMulti
             options={genreOptions}
             styles={colourStyles}

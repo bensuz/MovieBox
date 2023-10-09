@@ -77,7 +77,7 @@ const Movies = () => {
                                 key={movie.id}
                                 className="w-64 h-[430px] bg-gray-100 rounded-xl overflow-hidden hover:scale-105 transition-all duration-200"
                             >
-                                <Link to={`/movies/discover/${movie.id}`}>
+                                <Link to={`/movies/${movie.id}`}>
                                     <figure className="h-2/3 overflow-hidden">
                                         <img
                                             src={movie.poster}

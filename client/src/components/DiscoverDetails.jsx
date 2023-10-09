@@ -11,13 +11,14 @@ const DiscoverDetails = () => {
     const [error, setError] = useState(null);
     const [movie, setMovie] = useState(null);
     const [title, setTitle] = useState("");
+    const [releaseYear, setReleaseYear] = useState("");
     const [genres, setGenres] = useState([]);
     const [rating, setRating] = useState("");
     const [poster, setPoster] = useState("");
     const [overview, setOverview] = useState("");
     const [language, setLanguage] = useState("");
     const context = useContext(AuthContext);
-    const [trailers, setTrailers] = useState([]);
+    const [trailer, setTrailer] = useState("");
     const [userMovies, setUserMovies] = useState(null);
     const [movieExists, setMovieExists] = useState(false);
     const [userMovieId, setUserMovieId] = useState(null);
@@ -36,6 +37,7 @@ const DiscoverDetails = () => {
                 setTitle(response.data.title);
                 setGenres(response.data.genres.map((genre) => genre.name));
                 setRating(parseFloat(response.data.vote_average));
+                setReleaseYear(response.data.release_date.slice(0, 4));
                 setPoster(
                     `https://image.tmdb.org/t/p/original/${response.data.poster_path}`
                 );
@@ -55,44 +57,36 @@ const DiscoverDetails = () => {
     //fetching trailers from youtube data api
     useEffect(() => {
         const fetchTrailers = async () => {
+            console.log("Youtube API called");
             try {
-                if (trailers.length === 0) {
-                    // Make a request to the YouTube Data API to get trailers based on the movie title
-                    const response = await axios.get(
-                        "https://www.googleapis.com/youtube/v3/search",
-                        {
-                            params: {
-                                key: import.meta.env.VITE_YOUTUBE_API_KEY,
-                                q: `${title} official trailer`,
-                                part: "snippet",
-                                type: "video",
-                                maxResults: 1,
-                            },
-                        }
-                    );
+                // Make a request to the YouTube Data API to get trailers based on the movie title
+                const response = await axios.get(
+                    "https://www.googleapis.com/youtube/v3/search",
+                    {
+                        params: {
+                            key: import.meta.env.VITE_YOUTUBE_API_KEY,
+                            q: `${title} official trailer ${releaseYear}`,
+                            part: "snippet",
+                            type: "video",
+                            maxResults: 1,
+                        },
+                    }
+                );
 
-                    // Extract the video IDs from the API response
-                    const trailerIds = response.data.items.map(
-                        (item) => item.id.videoId
-                    );
+                // Extract the video IDs from the API response
+                const trailerId = response.data.items[0]?.id?.videoId;
 
-                    // Construct the YouTube video URLs
-                    const trailerUrls = trailerIds.map(
-                        (videoId) =>
-                            `https://www.youtube.com/watch?v=${videoId}`
-                    );
-
-                    // Set the trailers state variable with the video URLs
-                    setTrailers(trailerUrls);
-                }
+                // Set the trailers state variable with the video URLs
+                setTrailer(trailerId);
             } catch (error) {
                 console.error("Error fetching trailers:", error);
             }
         };
 
-        fetchTrailers(); // Call the fetchTrailers function
+        if (title && trailer == "") {
+            fetchTrailers(); // Call the fetchTrailers function
+        }
     }, [title]);
-    const videoId = trailers[0]?.split("v=")[1];
 
     //fetching user movies to compare to see if the tmdb movie is already on the list
 
@@ -296,7 +290,8 @@ const DiscoverDetails = () => {
                                         </div>
                                         <div className="2xl:max-w-[550px] 2xl:h-[400px] xl:max-w-[450px] xl:h-[300px]  max-xl:self-center lg:w-[500px] lg:h-[350px] max-lg:w-[350px] max-lg:h-[250px] max-sm:w-[200px] max-sm:h-[150px] rounded-xl shadow-md shadow-gray-600 overflow-hidden aspect-w-16 aspect-h-9 ">
                                             <iframe
-                                                src={`https://www.youtube.com/embed/${videoId}`}
+                                                // src={`https://www.youtube.com/embed/${videoId}`}
+                                                src={`https://www.youtube.com/embed/${trailer}`}
                                                 title="YouTube Video"
                                                 className="w-full h-full"
                                                 allowFullScreen
