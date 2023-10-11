@@ -1,6 +1,6 @@
 //header that containes logo, my list link, user avatar and notifications badge
 
-import { Fragment, useState } from "react";
+import { Fragment, useState, useRef, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import logo from "../assets/logo_new.png";
@@ -15,6 +15,26 @@ const RegularHeader = () => {
 
     const [menuOpen, setMenuOpen] = useState(false);
     const [isNotificationVisible, setIsNotificationVisible] = useState(true);
+
+    const mobileMenuRef = useRef(null);
+
+    // Function to close the menu
+    const close = () => {
+        setMenuOpen(false);
+    };
+
+    // Add a click event listener to close the menu when clicking outside
+
+    const handleClickOutside = (event) => {
+        if (
+            mobileMenuRef.current &&
+            !mobileMenuRef.current.contains(event.target)
+        ) {
+            close();
+        }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
 
     //logout function from the context
     const handleLogout = () => {
@@ -244,7 +264,10 @@ const RegularHeader = () => {
                     </div>
 
                     {context.user && (
-                        <Disclosure.Panel className="lg:hidden ">
+                        <Disclosure.Panel
+                            className="lg:hidden "
+                            ref={mobileMenuRef}
+                        >
                             {" "}
                             <div className="absolute divide-y right-6 z-50 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                                 <Transition

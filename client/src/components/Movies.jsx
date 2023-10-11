@@ -60,7 +60,8 @@ const Movies = () => {
     if (!movies) {
         return <Spinner className="h-16 w-16 text-mb-quartery" />;
     }
-
+    console.log(movies);
+    console.log(userMovies);
     return (
         <>
             <Hero />
