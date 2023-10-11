@@ -1,3 +1,5 @@
+// to be able to use the protected route
+
 import { useContext } from "react";
 import { AuthContext } from "../context/Auth";
 import { Navigate, Outlet } from "react-router-dom";

@@ -1,3 +1,4 @@
+// form for adding new movie
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -23,6 +24,7 @@ const NewMovie = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
 
+        //fetching the user movies to check if the new addition is already exist on the db or not
         axios
             .get(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
@@ -30,7 +32,7 @@ const NewMovie = () => {
                 }`
             )
             .then((res) => {
-                const existingMovies = res.data; // Assuming the response contains the user's movies
+                const existingMovies = res.data;
 
                 // Check if the movie already exists in the list
                 const movieExists = existingMovies.some(
@@ -50,7 +52,7 @@ const NewMovie = () => {
                     const selectedGenreLabels = selectedGenres.map(
                         (genre) => genre.label
                     );
-
+                    //adding the movie to db
                     axios
                         .post(
                             `${

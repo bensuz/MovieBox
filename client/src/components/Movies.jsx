@@ -1,3 +1,5 @@
+//main component of the homepage that displays user movie list and discover section of movies from tmdb
+
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
@@ -12,7 +14,6 @@ import "./movies.css";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
-// import SwiperCore, { Navigation, Pagination } from "swiper/core";
 import { EffectCoverflow, Pagination } from "swiper/modules";
 import { Link } from "react-router-dom";
 import Hero from "./Hero";
@@ -24,6 +25,7 @@ const Movies = () => {
     const [movies, setMovies] = useState(null);
     const [userMovies, setUserMovies] = useState(null);
 
+    //fetch movies from tmdb
     useEffect(() => {
         axios
             .get(
@@ -38,9 +40,9 @@ const Movies = () => {
             .catch((e) => console.log(e));
     }, []);
 
+    //fetch movies from user list (postgreSQL)
     useEffect(() => {
         if (context.user) {
-            // console.log(context.user);
             axios
                 .get(
                     `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${

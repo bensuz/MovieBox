@@ -1,4 +1,6 @@
 /* eslint-disable no-unused-vars */
+
+//updating the existing movie information
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -48,6 +50,7 @@ const UpdateMovie = () => {
         { value: "crime", label: "Chrime", color: "#784569" },
     ];
 
+    // fetching the movie details from user list db
     useEffect(() => {
         axios
             .get(
@@ -57,7 +60,7 @@ const UpdateMovie = () => {
             )
             .then((res) => {
                 setMovie(res.data);
-                setTitle(res.data.title)
+                setTitle(res.data.title);
                 setFetchedRating(res.data.rating);
                 const releaseDate = new Date(res.data.release_date);
                 const year = releaseDate.getFullYear();
@@ -81,7 +84,8 @@ const UpdateMovie = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
-    // console.log("update movie", movie);
+    //getting the new info from form by submission
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const rating = parseFloat(fetchedRating).toFixed(1);

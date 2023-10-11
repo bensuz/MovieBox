@@ -1,3 +1,5 @@
+// hero section with a video background and typeanimation
+
 import { TypeAnimation } from "react-type-animation";
 import movie from "../assets/movie_scene.mp4";
 

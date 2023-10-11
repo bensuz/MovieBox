@@ -8,7 +8,6 @@ import Animations from "./Animations";
 function Login() {
     window.scrollTo(0, 0);
     const context = useContext(AuthContext);
-    // const navigate = Navigate();
     const [user, setUser] = useState({
         userName: "",
         password: "",
@@ -25,10 +24,7 @@ function Login() {
     };
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        console.log("CONTEXT", context);
         context.login(user);
-        // navigate("/dashboard");
     };
 
     if (!context.loading && context.user) {

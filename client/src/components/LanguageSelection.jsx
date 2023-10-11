@@ -1,3 +1,5 @@
+//languageselection component for new movie and update movie components
+
 import "./LanguageSelection.css";
 import chroma from "chroma-js";
 import Select from "react-select";

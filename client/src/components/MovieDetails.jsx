@@ -1,3 +1,5 @@
+//movie details page that displays selected movie details from user movie list
+
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -10,6 +12,7 @@ const MovieDetails = () => {
     const [movie, setMovie] = useState(null);
     const [genres, setGenres] = useState([]);
 
+    //fetching the user movies and converting genres to array
     useEffect(() => {
         window.scrollTo(0, 0);
         axios
@@ -28,8 +31,8 @@ const MovieDetails = () => {
             .catch((e) => setError(e.response?.data?.message));
     }, []);
     const genresWithoutQuotes = genres.map((genre) => genre.replace(/"/g, ""));
-    console.log("for movie details page", movie);
 
+    //deleting the movie from db if pressed delete button
     const handleDelete = () => {
         axios
             .delete(
@@ -60,7 +63,7 @@ const MovieDetails = () => {
             })
             .catch((e) => console.log(e));
     };
-
+    //for blurred background
     const backgroundImageStyle = movie
         ? {
               backgroundImage: `url(${movie.poster})`,
@@ -73,6 +76,7 @@ const MovieDetails = () => {
         backdropFilter: "blur(10px)",
     };
 
+    //formatting the date to display properly
     const releaseDate = new Date(movie?.release_date);
     const formattedReleaseDate = releaseDate.toLocaleDateString("en-US", {
         year: "numeric",

@@ -1,3 +1,5 @@
+//animation on login and register pages
+
 import { useEffect, useState } from "react";
 import Lottie from "lottie-react";
 import animation1 from "../assets/animations/animation1.json";

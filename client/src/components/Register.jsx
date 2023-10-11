@@ -1,3 +1,5 @@
+// new user registration page
+
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/Auth";
 import { Link, Navigate } from "react-router-dom";
@@ -12,9 +14,12 @@ const Register = () => {
     const [isPopupTCOpen, setIsPopupTCOpen] = useState(false);
     const [isPopupPOpen, setIsPopupPOpen] = useState(false);
 
+    //for terms and conditions popup
     const openTCPopup = () => {
         setIsPopupTCOpen(true);
     };
+
+    //for privacy notice popup
     const openPPopup = () => {
         setIsPopupPOpen(true);
     };
@@ -34,12 +39,13 @@ const Register = () => {
         password: "",
         confirmPassword: "",
     });
+
+    //getting the info from the form and setting the new user
     const handleChange = (e) => {
         const { name, value } = e.target;
-        // console.log("name", name);
         setUser({ ...user, [name]: value });
-        // console.log("user", user);
     };
+    //registering the user using context for the register function
     const handleSubmit = (e) => {
         e.preventDefault();
         context.register(user);

@@ -1,3 +1,5 @@
+// user profile for user to be able to see their info on their account
+
 import defaultAvatar from "../assets/useravatar.png";
 import "./Profile.css";
 import { useAuth } from "../context/Auth";
@@ -6,6 +8,7 @@ const Profile = () => {
     window.scrollTo(0, 0);
     const { user, uploadAvatar, uploading, deleteAvatar } = useAuth();
 
+    //uploading avatar finctionality - backend handled in context
     const handleFileChange = async (e) => {
         e.preventDefault();
         const file = e.target.files[0];
@@ -16,7 +19,7 @@ const Profile = () => {
             uploadAvatar(formData);
         }
     };
-
+    //deleting avatar functionality - backend handled in context
     const handleDeleteAvatar = () => {
         deleteAvatar();
     };

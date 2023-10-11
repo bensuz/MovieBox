@@ -1,4 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/jsx-key */
+
+//discover section that shows movies from tmdb database on homepage
+
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
@@ -11,6 +15,8 @@ const Discover = () => {
 
     const [titles, setTitles] = useState([]);
     const [existingTitles, setExistingTitles] = useState([]);
+
+    //fetching movies from TMDB
 
     useEffect(() => {
         const fetchMovies = async () => {
@@ -34,6 +40,7 @@ const Discover = () => {
         fetchMovies();
     }, []);
 
+    //fetching usermovies from postgreSQL
     useEffect(() => {
         if (context.user) {
             axios
@@ -56,9 +63,6 @@ const Discover = () => {
         }
     }, []);
 
-    const handleAddMovie = () => {
-        console.log("added to the list");
-    };
     return (
         <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center my-3 gap-8 pb-20 ">
             {publicMovies.map((movie) => (
@@ -91,7 +95,6 @@ const Discover = () => {
                                             movie?.original_title
                                         ) ? (
                                             <button
-                                                onClick={handleAddMovie}
                                                 className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-mb-quartery transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                 data-ripple-dark="true"
                                             >
@@ -102,7 +105,6 @@ const Discover = () => {
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={handleAddMovie}
                                                 className="middle none center flex items-center justify-center rounded-lg p-3 font-sans text-xs font-bold uppercase text-gray-400 transition-all hover:bg-pink-500/10 active:bg-pink-500/30 disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
                                                 data-ripple-dark="true"
                                             >

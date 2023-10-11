@@ -1,6 +1,8 @@
+/* eslint-disable react/prop-types */
+// genre selection component for update movie and new movie components
+
 import "./GenreSelection.css";
 import chroma from "chroma-js";
-import { useEffect, useState } from "react";
 import Select from "react-select";
 
 const GenreSelection = ({ onGenreChange, parsedGenre }) => {
@@ -112,7 +114,6 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
             options={genreOptions}
             styles={colourStyles}
             autosize={true}
-            // placeholder={[moviegenre] || "Select genres"}
             className="react-select-container border-2 border-white rounded-2xl w-full  text-base"
             classNamePrefix="react-select"
             onChange={(selectedGenres) => {

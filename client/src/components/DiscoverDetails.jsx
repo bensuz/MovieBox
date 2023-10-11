@@ -1,3 +1,5 @@
+//details page of tmdb movies individually
+
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -7,6 +9,7 @@ import { useContext } from "react";
 
 const DiscoverDetails = () => {
     const { id } = useParams();
+    const context = useContext(AuthContext);
     const navigate = useNavigate();
     const [error, setError] = useState(null);
     const [movie, setMovie] = useState(null);
@@ -17,9 +20,7 @@ const DiscoverDetails = () => {
     const [poster, setPoster] = useState("");
     const [overview, setOverview] = useState("");
     const [language, setLanguage] = useState("");
-    const context = useContext(AuthContext);
     const [trailer, setTrailer] = useState("");
-    const [userMovies, setUserMovies] = useState(null);
     const [movieExists, setMovieExists] = useState(false);
     const [userMovieId, setUserMovieId] = useState(null);
 
@@ -86,12 +87,13 @@ const DiscoverDetails = () => {
         if (title && trailer == "") {
             fetchTrailers(); // Call the fetchTrailers function
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [title]);
 
     //fetching user movies to compare to see if the tmdb movie is already on the list
 
     if (context.user) {
-        console.log(context.user);
+        // console.log(context.user);
         axios
             .get(
                 `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
@@ -137,6 +139,7 @@ const DiscoverDetails = () => {
                         overview,
                     }
                 )
+                // eslint-disable-next-line no-unused-vars
                 .then((res) => {
                     Swal.fire({
                         position: "top-end",
@@ -152,6 +155,7 @@ const DiscoverDetails = () => {
         }
     };
 
+    //deleting selected movie from db
     const deleteFromMyList = () => {
         axios
             .delete(
@@ -183,6 +187,8 @@ const DiscoverDetails = () => {
             .catch((e) => console.log(e));
     };
 
+    // making the blurred background
+
     const backgroundImageStyle = movie
         ? {
               backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`,
@@ -195,6 +201,8 @@ const DiscoverDetails = () => {
         backdropFilter: "blur(10px)",
     };
 
+    //formatting the release date to show a readable date on card
+
     const releaseDateChanging = new Date(movie?.release_date);
     const formattedReleaseDate = releaseDateChanging.toLocaleDateString(
         "en-US",
@@ -204,7 +212,7 @@ const DiscoverDetails = () => {
             day: "numeric",
         }
     );
-
+    // formatting the release date to send the right format to db
     const releaseDateForPg = releaseDateChanging
         .toLocaleDateString("en-US", {
             year: "numeric",
@@ -219,6 +227,7 @@ const DiscoverDetails = () => {
         navigate("/login");
     };
 
+    //to be able to change the format of languages fetched from tmdb as longer string matching with db language column
     const languageMappings = {
         en: "English",
         it: "Italian",

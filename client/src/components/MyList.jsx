@@ -1,3 +1,5 @@
+//user list component that is acccessible with /mylist route
+
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import "./movies.css";
@@ -20,7 +22,7 @@ const MyList = () => {
     const [searchResults, setSearchResults] = useState([]);
     const [value, setValue] = useState("");
 
-    // console.log("useridfrontend", context.user.id);
+    // fetch user specific movies as user movie list
     useEffect(() => {
         window.scrollTo(0, 0);
         axios
@@ -38,24 +40,24 @@ const MyList = () => {
             .catch((e) => console.log(e));
     }, []);
 
+    //filter movies according the category with the dropdown menu that user can select a category
     const filterMovies = () => {
         if (selectedCategory === "ALL") {
-            return movies; // Display all articles when "All" is selected
+            return movies;
         } else {
             return movies?.filter((movie) =>
                 movie?.genre
                     ?.replace(/[{}"]/g, "")
                     ?.split(",")
-                    ?.map((genre) => genre?.toLowerCase().trim()) // Remove extra spaces and convert to lowercase
+                    ?.map((genre) => genre?.toLowerCase().trim())
                     .includes(selectedCategory?.toLowerCase())
             );
         }
     };
 
+    //search functionality combined woth filter
     useEffect(() => {
-        // Filter articles based on selected category
         const filteredMovies = filterMovies();
-
         // Filter the filtered articles based on the search input value
         const searchFilteredMovies = filteredMovies
             ? filteredMovies?.filter((movie) =>
