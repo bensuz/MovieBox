@@ -33,10 +33,15 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
             label: "Action",
             color: "#00B8D9",
         },
+        {
+            value: "fantasy",
+            label: "Fantasy",
+            color: "#454689",
+        },
     ];
 
     let defaultValue = genreOptions.filter((option) =>
-        parsedGenre.includes(option.label)
+        parsedGenre?.includes(option.label)
     );
     console.log(defaultValue);
 
@@ -46,6 +51,7 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
             border: 0,
             // This line disable the blue border
             boxShadow: "none",
+            minHeight: "100%",
         }),
         option: (styles, { isDisabled, isFocused, isSelected, data }) => {
             const color = chroma(data.color);
@@ -105,12 +111,14 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
             isMulti
             options={genreOptions}
             styles={colourStyles}
+            autosize={true}
             // placeholder={[moviegenre] || "Select genres"}
-            className="react-select-container border-2 border-white rounded-2xl absolute top-3 left-2 w-full pr-4 pb-2 text-base"
+            className="react-select-container border-2 border-white rounded-2xl w-full  text-base"
             classNamePrefix="react-select"
             onChange={(selectedGenres) => {
                 onGenreChange(selectedGenres);
             }}
+            name={parsedGenre}
         />
     );
 };

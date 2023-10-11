@@ -87,14 +87,19 @@ const LanguageSelection = ({ onLanguageChange, language }) => {
         }),
     };
 
+    let defaultValue = LanguageOptions.filter((option) =>
+        language?.includes(option.label)
+    );
+    console.log(defaultValue);
+
     return (
         <Select
             closeMenuOnSelect={true}
-            defaultValue={language}
+            defaultValue={defaultValue}
             isMulti={false}
             options={LanguageOptions}
             styles={colourStyles}
-            placeholder={language || "Select movie language"}
+            // placeholder={language || "Select movie language"}
             className="react-select-container border-white rounded-2xl absolute top-3 left-2 w-full pr-4 pb-2 text-base"
             classNamePrefix="react-select"
             onChange={(selectedLanguage) => {

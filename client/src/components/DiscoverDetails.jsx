@@ -12,8 +12,8 @@ const DiscoverDetails = () => {
     const [movie, setMovie] = useState(null);
     const [title, setTitle] = useState("");
     const [releaseYear, setReleaseYear] = useState("");
-    const [genres, setGenres] = useState([]);
-    const [rating, setRating] = useState("");
+    const [genre, setGenre] = useState([]);
+    const [fetchedRating, setFetchedRating] = useState("");
     const [poster, setPoster] = useState("");
     const [overview, setOverview] = useState("");
     const [language, setLanguage] = useState("");
@@ -35,8 +35,8 @@ const DiscoverDetails = () => {
                 );
                 setMovie(response.data);
                 setTitle(response.data.title);
-                setGenres(response.data.genres.map((genre) => genre.name));
-                setRating(parseFloat(response.data.vote_average));
+                setGenre(response.data.genres.map((genre) => genre.name));
+                setFetchedRating(parseFloat(response.data.vote_average));
                 setReleaseYear(response.data.release_date.slice(0, 4));
                 setPoster(
                     `https://image.tmdb.org/t/p/original/${response.data.poster_path}`
@@ -113,7 +113,7 @@ const DiscoverDetails = () => {
 
     //adding movie to the list if not already exists
     const handleAddMyList = () => {
-        const ratingFloat = parseFloat(rating).toFixed(1);
+        const rating = parseFloat(fetchedRating).toFixed(1);
 
         if (movieExists) {
             // Display a message indicating that the movie already exists
@@ -129,10 +129,10 @@ const DiscoverDetails = () => {
                     {
                         user_id: context.user.id,
                         title,
-                        genres,
-                        reversedDate,
-                        ratingFloat,
-                        language,
+                        genre,
+                        releaseDate,
+                        rating,
+                        language: languageMappings[language] || language,
                         poster,
                         overview,
                     }
@@ -195,14 +195,17 @@ const DiscoverDetails = () => {
         backdropFilter: "blur(10px)",
     };
 
-    const releaseDate = new Date(movie?.release_date);
-    const formattedReleaseDate = releaseDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-    });
+    const releaseDateChanging = new Date(movie?.release_date);
+    const formattedReleaseDate = releaseDateChanging.toLocaleDateString(
+        "en-US",
+        {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        }
+    );
 
-    const releaseDateForPg = releaseDate
+    const releaseDateForPg = releaseDateChanging
         .toLocaleDateString("en-US", {
             year: "numeric",
             month: "numeric",
@@ -210,10 +213,29 @@ const DiscoverDetails = () => {
         })
         .replace(/\//g, "-");
     const parts = releaseDateForPg.split("-");
-    const reversedDate = `${parts[2]}-${parts[0]}-${parts[1]}`;
+    const releaseDate = `${parts[2]}-${parts[0]}-${parts[1]}`;
 
     const handleLoginClick = () => {
         navigate("/login");
+    };
+
+    const languageMappings = {
+        en: "English",
+        it: "Italian",
+        de: "German",
+        ru: "Russian",
+        es: "Spanish",
+        pt: "Portuguese",
+        gr: "Greek",
+        fr: "French",
+        ja: "Japon",
+        nl: "Dutch",
+        hi: "Indian",
+        tr: "Turkish",
+        uk: "Ukranian",
+        ar: "Arabic",
+        bg: "Bulgarian",
+        da: "Danish",
     };
 
     return (

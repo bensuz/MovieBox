@@ -5,10 +5,13 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import GenreSelection from "./GenreSelection";
 import LanguageSelection from "./LanguageSelection";
+import { AuthContext } from "../context/Auth";
+import { useContext } from "react";
 
 const UpdateMovie = () => {
+    window.scrollTo(0, 0);
     const { id } = useParams();
-    // console.log(id);
+    const context = useContext(AuthContext);
     const navigate = useNavigate();
     const [movie, setMovie] = useState();
     const [error, setError] = useState();
@@ -16,7 +19,9 @@ const UpdateMovie = () => {
     const [selectedLanguage, setSelectedLanguage] = useState("");
     const [parsedGenre, setParsedGenre] = useState([]);
     const [loaded, setLoaded] = useState(false);
-
+    const [formattedReleaseDate, setFormattedReleaseDate] = useState("");
+    const [fetchedRating, setFetchedRating] = useState("");
+    const [title, setTitle] = useState("");
     const genreOptions = [
         {
             value: "adventure",
@@ -52,6 +57,17 @@ const UpdateMovie = () => {
             )
             .then((res) => {
                 setMovie(res.data);
+                setTitle(res.data.title)
+                setFetchedRating(res.data.rating);
+                const releaseDate = new Date(res.data.release_date);
+                const year = releaseDate.getFullYear();
+                const month = String(releaseDate.getMonth() + 1).padStart(
+                    2,
+                    "0"
+                );
+                const day = String(releaseDate.getDate()).padStart(2, "0");
+                const formattedDate = `${year}-${month}-${day}`;
+                setFormattedReleaseDate(formattedDate);
                 const genreNow = res.data.genre;
                 const validJsonGenre = genreNow
                     .replace(/^{/, "[")
@@ -65,17 +81,24 @@ const UpdateMovie = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [id]);
 
-    console.log(movie);
-
     // console.log("update movie", movie);
     const handleSubmit = (e) => {
         e.preventDefault();
+        const rating = parseFloat(fetchedRating).toFixed(1);
         axios
             .put(
                 `${
                     import.meta.env.VITE_SERVER_BASE_URL
                 }/api/usermovies/details/${id}`,
-                movie
+                {
+                    title,
+                    parsedGenre,
+                    formattedReleaseDate,
+                    rating,
+                    language,
+                    poster,
+                    overview,
+                }
             )
             .then((res) => {
                 Swal.fire(
@@ -99,10 +122,18 @@ const UpdateMovie = () => {
     const handleLanguageChange = (selectedLanguage) => {
         setSelectedLanguage(selectedLanguage);
     };
+
+    const handleReleaseDateChange = (e) => {
+        e.preventDefault();
+        const { name, value } = e.target;
+        setFormattedReleaseDate(value); // Update the formatted release date
+        setMovie((prevMovie) => ({ ...prevMovie, [name]: value })); // Update the movie state
+        console.log(movie);
+    };
     return (
         loaded && (
             <>
-                <div className=" h-[740px]">
+                <div className=" min-h-fit">
                     {" "}
                     {error && <p>{error}</p>}
                     <div className=" flex flex-col items-center justify-center py-36 ">
@@ -131,7 +162,7 @@ const UpdateMovie = () => {
                                     placeholder=" "
                                 />
                             </div>
-                            <div className="relative h-10 w-full min-w-[200px] ">
+                            <div className="relative h-28 w-full min-w-[200px] ">
                                 <label
                                     htmlFor="genre"
                                     className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[14px] font-normal leading-tight text-slate-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t-2 before:border-slate-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t-2 after:border-r-2 after:border-slate-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-slate-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-mb-quartery peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-mb-quartery peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-mb-quartery peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-slate-500"
@@ -147,16 +178,16 @@ const UpdateMovie = () => {
                             </div>
                             <div className="relative h-10 w-full min-w-[200px]">
                                 <label
-                                    htmlFor="releaseDate"
+                                    htmlFor="formattedReleaseDate"
                                     className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[14px] font-normal leading-tight text-slate-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t-2 before:border-slate-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t-2 after:border-r-2 after:border-slate-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-slate-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-mb-quartery peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-mb-quartery peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-mb-quartery peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-slate-500"
                                 >
                                     Release Date
                                 </label>
                                 <input
                                     type="date"
-                                    name="releaseDate"
-                                    value={movie?.release_date || ""}
-                                    onChange={handleChange}
+                                    name="formattedReleaseDate"
+                                    value={formattedReleaseDate || ""}
+                                    onChange={handleReleaseDateChange}
                                     className=" peer h-full w-full rounded-[7px] border-2 border-slate-500 border-t-transparent bg-transparent px-5 py-6 font-sans text-lg font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-2 placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 focus:border-2 focus:border-mb-quartery focus:border-t-transparent focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                                     placeholder=" "
                                 />
@@ -210,7 +241,7 @@ const UpdateMovie = () => {
                                     placeholder=" "
                                 />
                             </div>
-                            <div className="relative h-10 w-full min-w-[200px]">
+                            <div className="relative h-40 w-full min-w-[200px]">
                                 <label
                                     htmlFor="overview"
                                     className="before:content[' '] after:content[' '] pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none text-[14px] font-normal leading-tight text-slate-500 transition-all before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:border-t-2 before:border-slate-500 before:transition-all after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:border-t-2 after:border-r-2 after:border-slate-500 after:transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:leading-[3.75] peer-placeholder-shown:text-slate-500 peer-placeholder-shown:before:border-transparent peer-placeholder-shown:after:border-transparent peer-focus:text-[11px] peer-focus:leading-tight peer-focus:text-mb-quartery peer-focus:before:border-t-2 peer-focus:before:border-l-2 peer-focus:before:border-mb-quartery peer-focus:after:border-t-2 peer-focus:after:border-r-2 peer-focus:after:border-mb-quartery peer-disabled:text-transparent peer-disabled:before:border-transparent peer-disabled:after:border-transparent peer-disabled:peer-placeholder-shown:text-slate-500"

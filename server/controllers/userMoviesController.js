@@ -73,10 +73,9 @@ module.exports = {
         const { id } = req.params;
         const {
             title,
-
-            genres,
-            reversedDate,
-            ratingFloat,
+            parsedGenre,
+            formattedReleaseDate,
+            rating,
             language,
             poster,
             overview,
@@ -86,9 +85,9 @@ module.exports = {
             [
                 id,
                 title,
-                genres,
-                reversedDate,
-                ratingFloat,
+                parsedGenre,
+                formattedReleaseDate,
+                rating,
                 language,
                 poster,
                 overview,
