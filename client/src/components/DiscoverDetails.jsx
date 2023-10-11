@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../axiosInstance";
 import Swal from "sweetalert2";
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
@@ -30,9 +30,7 @@ const DiscoverDetails = () => {
         const fetchMovie = async () => {
             try {
                 const response = await axios.get(
-                    `${
-                        import.meta.env.VITE_SERVER_BASE_URL
-                    }/api/publicmovies/public/${id}`
+                    `/api/publicmovies/public/${id}`
                 );
                 setMovie(response.data);
                 setTitle(response.data.title);
@@ -96,7 +94,7 @@ const DiscoverDetails = () => {
         // console.log(context.user);
         axios
             .get(
-                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                `/api/usermovies/${
                     context.user.id
                 }`
             )
@@ -127,7 +125,7 @@ const DiscoverDetails = () => {
         } else {
             axios
                 .post(
-                    `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies`,
+                    `/api/usermovies`,
                     {
                         user_id: context.user.id,
                         title,
@@ -159,9 +157,7 @@ const DiscoverDetails = () => {
     const deleteFromMyList = () => {
         axios
             .delete(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/api/usermovies/details/${userMovieId}`
+                `/api/usermovies/details/${userMovieId}`
             )
             // eslint-disable-next-line no-unused-vars
             .then((res) => {

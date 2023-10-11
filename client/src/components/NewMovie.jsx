@@ -1,6 +1,6 @@
 // form for adding new movie
 import { useState } from "react";
-import axios from "axios";
+import axios from "../axiosInstance";
 import { useNavigate } from "react-router-dom";
 import RegularHeader from "./RegularHeader";
 import { AuthContext } from "../context/Auth";
@@ -27,7 +27,7 @@ const NewMovie = () => {
         //fetching the user movies to check if the new addition is already exist on the db or not
         axios
             .get(
-                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                `/api/usermovies/${
                     context.user.id
                 }`
             )
@@ -55,9 +55,7 @@ const NewMovie = () => {
                     //adding the movie to db
                     axios
                         .post(
-                            `${
-                                import.meta.env.VITE_SERVER_BASE_URL
-                            }/api/usermovies`,
+                            `/api/usermovies`,
                             {
                                 user_id: context.user.id,
                                 title,

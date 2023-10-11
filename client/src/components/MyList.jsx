@@ -1,7 +1,7 @@
 //user list component that is acccessible with /mylist route
 
 import { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios from "../axiosInstance";
 import "./movies.css";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
@@ -27,7 +27,7 @@ const MyList = () => {
         window.scrollTo(0, 0);
         axios
             .get(
-                `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                `/api/usermovies/${
                     context.user.id
                 }`
             )

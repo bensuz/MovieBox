@@ -6,7 +6,7 @@
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../axiosInstance";
 import { Link } from "react-router-dom";
 
 const Discover = () => {
@@ -22,9 +22,7 @@ const Discover = () => {
         const fetchMovies = async () => {
             try {
                 const response = await axios.get(
-                    `${
-                        import.meta.env.VITE_SERVER_BASE_URL
-                    }/api/publicmovies/public`
+                    `/api/publicmovies/public`
                 );
                 setPublicMovies(response.data);
                 const titles = response.data.map(
@@ -45,7 +43,7 @@ const Discover = () => {
         if (context.user) {
             axios
                 .get(
-                    `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
+                    `/api/usermovies/${
                         context.user.id
                     }`
                 )

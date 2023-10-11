@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../axiosInstance";
 import Swal from "sweetalert2";
 
 const MovieDetails = () => {
@@ -17,9 +17,7 @@ const MovieDetails = () => {
         window.scrollTo(0, 0);
         axios
             .get(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/api/usermovies/details/${id}`
+                `/api/usermovies/details/${id}`
             )
             .then((res) => {
                 setMovie(res.data);
@@ -36,9 +34,7 @@ const MovieDetails = () => {
     const handleDelete = () => {
         axios
             .delete(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/api/usermovies/details/${id}`
+                `/api/usermovies/details/${id}`
             )
             // eslint-disable-next-line no-unused-vars
             .then((res) => {

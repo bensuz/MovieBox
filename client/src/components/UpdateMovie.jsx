@@ -3,7 +3,7 @@
 //updating the existing movie information
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import axios from "axios";
+import axios from "../axiosInstance";
 import Swal from "sweetalert2";
 import GenreSelection from "./GenreSelection";
 import LanguageSelection from "./LanguageSelection";
@@ -53,11 +53,7 @@ const UpdateMovie = () => {
     // fetching the movie details from user list db
     useEffect(() => {
         axios
-            .get(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/api/usermovies/details/${id}`
-            )
+            .get(`/api/usermovies/details/${id}`)
             .then((res) => {
                 setMovie(res.data);
                 setTitle(res.data.title);
@@ -90,20 +86,15 @@ const UpdateMovie = () => {
         e.preventDefault();
         const rating = parseFloat(fetchedRating).toFixed(1);
         axios
-            .put(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/api/usermovies/details/${id}`,
-                {
-                    title,
-                    parsedGenre,
-                    formattedReleaseDate,
-                    rating,
-                    language,
-                    poster,
-                    overview,
-                }
-            )
+            .put(`/api/usermovies/details/${id}`, {
+                title,
+                parsedGenre,
+                formattedReleaseDate,
+                rating,
+                language,
+                poster,
+                overview,
+            })
             .then((res) => {
                 Swal.fire(
                     "Updated!",

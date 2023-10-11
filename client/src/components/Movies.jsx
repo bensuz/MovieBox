@@ -3,7 +3,7 @@
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../axiosInstance";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
@@ -29,9 +29,7 @@ const Movies = () => {
     useEffect(() => {
         axios
             .get(
-                `${
-                    import.meta.env.VITE_SERVER_BASE_URL
-                }/api/publicmovies/public`
+                `/api/publicmovies/public`
             )
             .then((res) => {
                 console.log(res.data);
