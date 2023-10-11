@@ -17,13 +17,11 @@ const Discover = () => {
     const [existingTitles, setExistingTitles] = useState([]);
 
     //fetching movies from TMDB
-
+    console.log("vite env", import.meta.env.VITE_ENES);
     useEffect(() => {
         const fetchMovies = async () => {
             try {
-                const response = await axios.get(
-                    `/api/publicmovies/public`
-                );
+                const response = await axios.get(`/api/publicmovies/public`);
                 setPublicMovies(response.data);
                 const titles = response.data.map(
                     (movie) => movie.original_title
@@ -42,11 +40,7 @@ const Discover = () => {
     useEffect(() => {
         if (context.user) {
             axios
-                .get(
-                    `/api/usermovies/${
-                        context.user.id
-                    }`
-                )
+                .get(`/api/usermovies/${context.user.id}`)
                 .then((res) => {
                     const existingMovies = res.data;
                     const existingTitles = existingMovies.map(

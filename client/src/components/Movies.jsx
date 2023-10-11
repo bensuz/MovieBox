@@ -28,9 +28,7 @@ const Movies = () => {
     //fetch movies from tmdb
     useEffect(() => {
         axios
-            .get(
-                `/api/publicmovies/public`
-            )
+            .get(`/api/publicmovies/public`)
             .then((res) => {
                 console.log(res.data);
                 setMovies(res.data);
@@ -42,11 +40,7 @@ const Movies = () => {
     useEffect(() => {
         if (context.user) {
             axios
-                .get(
-                    `${import.meta.env.VITE_SERVER_BASE_URL}/api/usermovies/${
-                        context.user.id
-                    }`
-                )
+                .get(`/api/usermovies/${context.user.id}`)
                 .then((res) => {
                     console.log(res.data);
                     setUserMovies(res.data);

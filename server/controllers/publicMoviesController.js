@@ -50,4 +50,32 @@ module.exports = {
             res.status(500).json({ error: "Failed to fetch movie details" });
         }
     },
+
+    getTrailer: async (req, res) => {
+        try {
+            const { title, releaseYear } = req.body;
+            // Make a request to the YouTube Data API to get trailers based on the movie title
+            const response = await axios.get(
+                "https://www.googleapis.com/youtube/v3/search",
+                {
+                    params: {
+                        key: process.env.YOUTUBE_API_KEY,
+                        q: `${title} official trailer ${releaseYear}`,
+                        part: "snippet",
+                        type: "video",
+                        maxResults: 1,
+                    },
+                }
+            );
+            res.json(response.data);
+            // Extract the video IDs from the API response
+            // const trailerId = response.data.items[0]?.id?.videoId;
+
+            // Set the trailers state variable with the video URLs
+            // setTrailer(trailerId);
+        } catch (error) {
+            console.error("Error fetching movie details:", error);
+            res.status(500).json({ error: "Failed to fetch trailer" });
+        }
+    },
 };

@@ -6,4 +6,6 @@ router.get("/public", moviesController.getTMDBMovies);
 
 router.get("/public/:id", moviesController.getTMDBMovieDetails);
 
+router.post("/public/:id/trailer", moviesController.getTrailer);
+
 module.exports = router;

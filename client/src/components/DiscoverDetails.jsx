@@ -56,19 +56,12 @@ const DiscoverDetails = () => {
     //fetching trailers from youtube data api
     useEffect(() => {
         const fetchTrailers = async () => {
-            console.log("Youtube API called");
             try {
-                // Make a request to the YouTube Data API to get trailers based on the movie title
-                const response = await axios.get(
-                    "https://www.googleapis.com/youtube/v3/search",
+                const response = await axios.post(
+                    `/api/publicmovies/public/${id}/trailer`,
                     {
-                        params: {
-                            key: import.meta.env.VITE_YOUTUBE_API_KEY,
-                            q: `${title} official trailer ${releaseYear}`,
-                            part: "snippet",
-                            type: "video",
-                            maxResults: 1,
-                        },
+                        title,
+                        releaseYear,
                     }
                 );
 
@@ -93,11 +86,7 @@ const DiscoverDetails = () => {
     if (context.user) {
         // console.log(context.user);
         axios
-            .get(
-                `/api/usermovies/${
-                    context.user.id
-                }`
-            )
+            .get(`/api/usermovies/${context.user.id}`)
             .then((res) => {
                 const matchingUserMovie = res.data.find(
                     (movie) => movie.title === title
@@ -124,19 +113,16 @@ const DiscoverDetails = () => {
             });
         } else {
             axios
-                .post(
-                    `/api/usermovies`,
-                    {
-                        user_id: context.user.id,
-                        title,
-                        genre,
-                        releaseDate,
-                        rating,
-                        language: languageMappings[language] || language,
-                        poster,
-                        overview,
-                    }
-                )
+                .post(`/api/usermovies`, {
+                    user_id: context.user.id,
+                    title,
+                    genre,
+                    releaseDate,
+                    rating,
+                    language: languageMappings[language] || language,
+                    poster,
+                    overview,
+                })
                 // eslint-disable-next-line no-unused-vars
                 .then((res) => {
                     Swal.fire({
@@ -156,9 +142,7 @@ const DiscoverDetails = () => {
     //deleting selected movie from db
     const deleteFromMyList = () => {
         axios
-            .delete(
-                `/api/usermovies/details/${userMovieId}`
-            )
+            .delete(`/api/usermovies/details/${userMovieId}`)
             // eslint-disable-next-line no-unused-vars
             .then((res) => {
                 Swal.fire({
