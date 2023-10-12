@@ -1,8 +1,28 @@
 import MailIcon from "@mui/icons-material/Mail";
 import { Divider, IconButton, InputBase, Paper } from "@mui/material";
 import logo from "../assets/logo_new.png";
+import Swal from "sweetalert2";
 
 const Footer = () => {
+    const handleSendMail = () => {
+        const emailInput = document.getElementById("email-input");
+        const email = emailInput.value;
+        if (validateEmail(email)) {
+            Swal.fire("Subscription is successful!", "Thank you!", "success");
+        } else {
+            Swal.fire(
+                "Invalid email!",
+                "Please enter a valid email address.",
+                "error"
+            );
+        }
+    };
+
+    const validateEmail = (email) => {
+        const emailRegex = /^[A-Za-z0-9._%-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+        return emailRegex.test(email);
+    };
+
     return (
         <div className="bg-slate-900 font-figtree text-white min-h-56 px-64 py-10 max-xl:py-10 max-xl:gap-2 max-xl:px-10 max-xl:flex max-xl:flex-col max-xl:items-center max-xl:justify-center">
             {" "}
@@ -31,15 +51,20 @@ const Footer = () => {
                         }}
                     >
                         <InputBase
+                            id="email-input"
                             sx={{ ml: 1, flex: 1 }}
                             placeholder="enter your e-mail"
-                            inputProps={{ "aria-label": "enter your e-mail" }}
+                            inputProps={{
+                                "aria-label": "enter your e-mail",
+                                type: "email",
+                            }}
                         />
                         <Divider
                             sx={{ height: 28, m: 0.5 }}
                             orientation="vertical"
                         />
                         <IconButton
+                            onClick={handleSendMail}
                             color="primary"
                             sx={{ p: "10px" }}
                             aria-label="directions"

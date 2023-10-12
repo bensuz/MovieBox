@@ -1,5 +1,5 @@
 // form for adding new movie
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../axiosInstance";
 import { useNavigate } from "react-router-dom";
 import RegularHeader from "./RegularHeader";
@@ -10,7 +10,6 @@ import GenreSelection from "./GenreSelection";
 import LanguageSelection from "./LanguageSelection";
 
 const NewMovie = () => {
-    window.scrollTo(0, 0);
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [releaseDate, setReleaseDate] = useState("");
@@ -21,16 +20,16 @@ const NewMovie = () => {
     const [selectedLanguage, setSelectedLanguage] = useState("");
     const context = useContext(AuthContext);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     const handleSubmit = (e) => {
         e.preventDefault();
 
         //fetching the user movies to check if the new addition is already exist on the db or not
         axios
-            .get(
-                `/api/usermovies/${
-                    context.user.id
-                }`
-            )
+            .get(`/api/usermovies/${context.user.id}`)
             .then((res) => {
                 const existingMovies = res.data;
 
@@ -48,27 +47,22 @@ const NewMovie = () => {
                     });
                 } else {
                     // Movie does not exist, proceed to add it
-                    console.log(rating);
                     const selectedGenreLabels = selectedGenres.map(
                         (genre) => genre.label
                     );
                     //adding the movie to db
                     axios
-                        .post(
-                            `/api/usermovies`,
-                            {
-                                user_id: context.user.id,
-                                title,
-                                genre: selectedGenreLabels,
-                                releaseDate,
-                                rating,
-                                language: selectedLanguage.value,
-                                poster,
-                                overview,
-                            }
-                        )
+                        .post(`/api/usermovies`, {
+                            user_id: context.user.id,
+                            title,
+                            genre: selectedGenreLabels,
+                            releaseDate,
+                            rating,
+                            language: selectedLanguage.value,
+                            poster,
+                            overview,
+                        })
                         .then((res) => {
-                            console.log(res.data);
                             Swal.fire({
                                 position: "top-end",
                                 icon: "success",

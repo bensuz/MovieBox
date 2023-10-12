@@ -6,7 +6,6 @@ import logo from "../assets/logo_new.png";
 import Animations from "./Animations";
 
 function Login() {
-    window.scrollTo(0, 0);
     const context = useContext(AuthContext);
     const [user, setUser] = useState({
         userName: "",
@@ -17,6 +16,10 @@ function Login() {
     const [paragraphText, setParagraphText] = useState(
         "Find Out About the Most Popular Movies"
     );
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const handleChange = (e) => {
         const { name, value } = e.target;

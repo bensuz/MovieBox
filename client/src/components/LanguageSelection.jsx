@@ -92,7 +92,6 @@ const LanguageSelection = ({ onLanguageChange, language }) => {
     let defaultValue = LanguageOptions.filter((option) =>
         language?.includes(option.label)
     );
-    console.log(defaultValue);
 
     return (
         <Select

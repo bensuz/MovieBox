@@ -11,7 +11,6 @@ import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
 
 const UpdateMovie = () => {
-    window.scrollTo(0, 0);
     const { id } = useParams();
     const context = useContext(AuthContext);
     const navigate = useNavigate();
@@ -50,6 +49,9 @@ const UpdateMovie = () => {
         { value: "crime", label: "Chrime", color: "#784569" },
     ];
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     // fetching the movie details from user list db
     useEffect(() => {
         axios
@@ -73,7 +75,7 @@ const UpdateMovie = () => {
                     .replace(/}$/, "]");
                 setParsedGenre(JSON.parse(validJsonGenre));
 
-                console.log("parsed genre", JSON.parse(validJsonGenre));
+                // console.log("parsed genre", JSON.parse(validJsonGenre));
                 setLoaded(true);
             })
             .catch((e) => setError(e.response?.data?.message));
@@ -87,13 +89,10 @@ const UpdateMovie = () => {
         const rating = parseFloat(fetchedRating).toFixed(1);
         axios
             .put(`/api/usermovies/details/${id}`, {
-                title,
-                parsedGenre,
-                formattedReleaseDate,
-                rating,
-                language,
-                poster,
-                overview,
+                ...movie,
+                genre: selectedGenres.map((genre) => genre.label),
+                releaseDate: formattedReleaseDate,
+                language: selectedLanguage.label,
             })
             .then((res) => {
                 Swal.fire(
@@ -123,7 +122,7 @@ const UpdateMovie = () => {
         const { name, value } = e.target;
         setFormattedReleaseDate(value); // Update the formatted release date
         setMovie((prevMovie) => ({ ...prevMovie, [name]: value })); // Update the movie state
-        console.log(movie);
+        // console.log(movie);
     };
     return (
         loaded && (

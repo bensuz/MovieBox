@@ -6,6 +6,7 @@ import axios from "../axiosInstance";
 import Swal from "sweetalert2";
 import { AuthContext } from "../context/Auth";
 import { useContext } from "react";
+import noposter from "../assets/noposter.jpg";
 
 const DiscoverDetails = () => {
     const { id } = useParams();
@@ -171,7 +172,9 @@ const DiscoverDetails = () => {
 
     const backgroundImageStyle = movie
         ? {
-              backgroundImage: `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`,
+              backgroundImage: movie.poster_path
+                  ? `url(https://image.tmdb.org/t/p/original/${movie.poster_path})`
+                  : `url(${noposter})`,
               backgroundSize: "cover",
           }
         : {};
@@ -241,7 +244,7 @@ const DiscoverDetails = () => {
                 {movie && (
                     <>
                         {" "}
-                        <div className="z-10 flex max-xl:flex-col  rounded-l-xl  max-xl:rounded-t-xl shadow-xl shadow-slate-500  w-5/6 text-white">
+                        <div className="z-10 flex max-xl:flex-col  rounded-l-xl  max-xl:rounded-t-xl shadow-xl shadow-slate-500  w-5/6 text-white ">
                             <div className="flex justify-center items-center max-sm:min-h-fit  min-h-[600px] overflow-hidden min-w-1/3 xl:w-1/2">
                                 <img
                                     src={`https://image.tmdb.org/t/p/original/${movie?.poster_path}`}
@@ -249,7 +252,7 @@ const DiscoverDetails = () => {
                                     className="xl:rounded-l-xl max-xl:rounded-t-xl shadow-2xl shadow-gray-400 w-full"
                                 />
                             </div>
-                            <div className="font-scada xl:w-1/2 min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center max-xl:py-14 bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl">
+                            <div className="font-scada xl:w-1/2 min-h-[600px] overflow-hidden pl-10 max-sm:pl-0  flex flex-col justify-start  items-start  max-xl:justify-center max-xl:items-center max-xl:py-14 bg-slate-900 xl:rounded-r-xl max-xl:rounded-b-xl pb-10">
                                 <h2 className="text-6xl xl:pt-20 font-medium max-sm:text-center uppercase max-md:text-4xl">
                                     {movie?.title}
                                 </h2>

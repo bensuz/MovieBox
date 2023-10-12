@@ -9,6 +9,8 @@ import MyList from "./MyList";
 import ProtectedRoute from "./ProtectedRoute";
 import Login from "./Login";
 import Profile from "./Profile";
+import Search from "./Search";
+import SearchIcon from "./SearchIcon";
 
 const Main = () => {
     return (
@@ -24,6 +26,8 @@ const Main = () => {
                 />
                 <Route path="/register" element={<Register />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/search" element={<SearchIcon />} />
+                <Route path="/search/:query" element={<Search />} />
                 <Route path="/" element={<ProtectedRoute />}>
                     <Route path="/mylist" element={<MyList />} />
                     <Route path="/profile" element={<Profile />} />

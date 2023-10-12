@@ -17,7 +17,7 @@ const Discover = () => {
     const [existingTitles, setExistingTitles] = useState([]);
 
     //fetching movies from TMDB
-    console.log("vite env", import.meta.env.VITE_ENES);
+
     useEffect(() => {
         const fetchMovies = async () => {
             try {

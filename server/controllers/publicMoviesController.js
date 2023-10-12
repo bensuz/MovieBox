@@ -30,6 +30,27 @@ module.exports = {
         }
     },
 
+    getTMDBSearch: async (req, res) => {
+        // Controller logic to fetch movies from TMDB
+        try {
+            const { query } = req.params;
+            console.log("backend query", query);
+            const options = {
+                method: "GET",
+                url: `https://api.themoviedb.org/3/search/movie?query=${query}`,
+                headers: {
+                    accept: "application/json",
+                    Authorization: `Bearer ${TMDB_ACCESS_TOKEN}`,
+                },
+            };
+
+            const response = await axios.request(options);
+            res.json(response.data.results);
+        } catch (error) {
+            console.error("Error fetching movies:", error);
+            res.status(500).json({ error: "Failed to fetch movies" });
+        }
+    },
     getTMDBMovieDetails: async (req, res) => {
         // Controller logic to fetch a single movie details from TMDB
         try {

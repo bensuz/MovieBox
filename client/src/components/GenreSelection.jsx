@@ -40,18 +40,21 @@ const GenreSelection = ({ onGenreChange, parsedGenre }) => {
             label: "Fantasy",
             color: "#454689",
         },
+        {
+            value: "crime",
+            label: "Crime",
+            color: "#451219",
+        },
     ];
 
     let defaultValue = genreOptions.filter((option) =>
         parsedGenre?.includes(option.label)
     );
-    console.log(defaultValue);
 
     const colourStyles = {
         control: (base) => ({
             ...base,
             border: 0,
-            // This line disable the blue border
             boxShadow: "none",
             minHeight: "100%",
         }),

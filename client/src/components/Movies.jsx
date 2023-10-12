@@ -30,7 +30,6 @@ const Movies = () => {
         axios
             .get(`/api/publicmovies/public`)
             .then((res) => {
-                console.log(res.data);
                 setMovies(res.data);
             })
             .catch((e) => console.log(e));
@@ -42,7 +41,6 @@ const Movies = () => {
             axios
                 .get(`/api/usermovies/${context.user.id}`)
                 .then((res) => {
-                    console.log(res.data);
                     setUserMovies(res.data);
                 })
                 .catch((e) => console.log(e));
@@ -52,8 +50,7 @@ const Movies = () => {
     if (!movies) {
         return <Spinner className="h-16 w-16 text-mb-quartery" />;
     }
-    console.log(movies);
-    console.log(userMovies);
+
     return (
         <>
             <Hero />

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "../axiosInstance";
 import Swal from "sweetalert2";
+import noposter from "../assets/noposter.jpg";
 
 const MovieDetails = () => {
     const { id } = useParams();
@@ -16,9 +17,7 @@ const MovieDetails = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         axios
-            .get(
-                `/api/usermovies/details/${id}`
-            )
+            .get(`/api/usermovies/details/${id}`)
             .then((res) => {
                 setMovie(res.data);
                 const genresArray = res.data.genre
@@ -33,9 +32,7 @@ const MovieDetails = () => {
     //deleting the movie from db if pressed delete button
     const handleDelete = () => {
         axios
-            .delete(
-                `/api/usermovies/details/${id}`
-            )
+            .delete(`/api/usermovies/details/${id}`)
             // eslint-disable-next-line no-unused-vars
             .then((res) => {
                 Swal.fire({
@@ -62,7 +59,9 @@ const MovieDetails = () => {
     //for blurred background
     const backgroundImageStyle = movie
         ? {
-              backgroundImage: `url(${movie.poster})`,
+              backgroundImage: movie.poster
+                  ? `url(${movie.poster})`
+                  : `url(${noposter})`,
               backgroundSize: "cover",
           }
         : {};

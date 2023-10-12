@@ -73,8 +73,8 @@ module.exports = {
         const { id } = req.params;
         const {
             title,
-            parsedGenre,
-            formattedReleaseDate,
+            genre,
+            releaseDate,
             rating,
             language,
             poster,
@@ -82,16 +82,7 @@ module.exports = {
         } = req.body;
         pool.query(
             "UPDATE user_movies SET  title = $2, genre = $3, release_date = $4, rating = $5, language = $6, poster = $7, overview = $8 WHERE id=$1 RETURNING *;",
-            [
-                id,
-                title,
-                parsedGenre,
-                formattedReleaseDate,
-                rating,
-                language,
-                poster,
-                overview,
-            ]
+            [id, title, genre, releaseDate, rating, language, poster, overview]
         )
             .then(({ rows }) => {
                 res.status(200).json(rows[0]);

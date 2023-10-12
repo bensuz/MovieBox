@@ -49,7 +49,7 @@ const Register = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         context.register(user);
-        console.log("submit:", user);
+        // console.log("submit:", user);
     };
 
     if (!context.loading && context.user) {
