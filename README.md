@@ -1,7 +1,5 @@
 # MovieBox
 
-This is a practice project to test different technologies I have learned.
-
 ## Table of contents
 
 -   [Overview](#overview)
@@ -30,44 +28,31 @@ Users should be able to:
 -   Search for movies on the vast TMDb database
 -   Watch movie trailers on the movie details page
 -   View the optimal layout for the website depending on their device's screen size
--   See hover states for all interactive elements on the page
-
-Technologies:
-
--   Server side rendering
--   Integrated TMDb API
--   Search ability with search box toggles when clicked to search button
--   Placeholder poster for movies that does not have poster
--   Movie information also contains youtube trailer
--   Account Section with email auth
--   Protected routes according to auth
--   interactive feedback with sweetalert2
 
 ### Built with
 
 <p align="left">
-    <a href="https://www.w3.org/html/" target="_blank" title="HTML"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="30" height="30"/> </a> 
-    <a href="https://www.w3schools.com/css/" target="_blank" title="CSS"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="30" height="30"/> </a> 
-    <a href="https://tailwindcss.com/" target="_blank" title="Tailwind"> <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="tailwind" width="30" height="30"/> </a> 
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" title="JavaScript"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="30" height="30"/> </a> 
-    <a href="https://reactjs.org/" target="_blank" title="React"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="30" height="30"/> </a> 
-    <a href="https://nodejs.org" target="_blank" title="Node.js"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="30" height="30"/> </a> 
-    <a href="https://expressjs.com" target="_blank" title="Express.js"> <img src="https://markovate.com/wp-content/uploads/2022/06/Is-Express.js-Framework-An-Ideal-Choice-For-Developing-Enterprise-Applications_@2x.png" alt="express" width="40" height="30"/> </a>
-    <a href="https://www.postgresql.org" target="_blank" title="PostgreSQL"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="30" height="30"/> </a> 
+    <a href="https://www.w3.org/html/" target="_blank" title="HTML"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/html5/html5-original-wordmark.svg" alt="html5" width="50" height="50"/> </a> 
+    <a href="https://www.w3schools.com/css/" target="_blank" title="CSS"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/css3/css3-original-wordmark.svg" alt="css3" width="50" height="50"/> </a> 
+    <a href="https://tailwindcss.com/" target="_blank" title="Tailwind"> <img src="https://www.vectorlogo.zone/logos/tailwindcss/tailwindcss-icon.svg" alt="tailwind" width="50" height="50"/> </a> 
+    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" title="JavaScript"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="50" height="50"/> </a> 
+    <a href="https://reactjs.org/" target="_blank" title="React"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="50" height="50"/> </a> 
+    <a href="https://nodejs.org" target="_blank" title="Node.js"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="60" height="50"/> </a> 
+    <a href="https://expressjs.com" target="_blank" title="Express.js"> <img src="https://markovate.com/wp-content/uploads/2022/06/Is-Express.js-Framework-An-Ideal-Choice-For-Developing-Enterprise-Applications_@2x.png" alt="express" width="70" height="50"/> </a>
+    <a href="https://www.postgresql.org" target="_blank" title="PostgreSQL"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="50" height="50"/> </a> 
 </p>
 
 -   Node.js & React.js
+-   Express.js
+-   PostgreSQL
 -   [tailwindcss](https://tailwindcss.com/) - CSS Framework
--   Flexbox
 -   HeadlessUI
 -   Mobile-first workflow
+-   React Router
 -   TMDb API
 -   Youtube Database v3 API
 -   Axios
--   React Router
 -   State Management with Context API
--   Express.js
--   PostgreSQL
 -   JSON Web Tokens (JWT) Authentication
 -   Cookies
 -   Password Hashing with Salts
@@ -82,7 +67,6 @@ Technologies:
 -   Styling with Tailwind CSS and HeadlessUI Components
 -   Multiple fetch requests
 -   Dynamic Components
--   Server-side rendering
 -   PostgreSQL Database Interaction
 -   Auth with JWT
 
