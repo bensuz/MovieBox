@@ -6,10 +6,8 @@ This is a practice project to test different technologies I have learned.
 
 -   [Overview](#overview)
 -   [Functionality](#functionality)
--   [My process](#my-process)
 -   [Built with](#built-with)
 -   [What I learned](#what-i-learned)
--   [Preview](#preview)
 -   [Links](#links)
 -   [Screenshot](#screenshot)
 -   [Author](#author)
@@ -45,8 +43,6 @@ Technologies:
 -   Protected routes according to auth
 -   interactive feedback with sweetalert2
 
-## My process
-
 ### Built with
 
 <p align="left">
@@ -56,10 +52,9 @@ Technologies:
     <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" title="JavaScript"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="30" height="30"/> </a> 
     <a href="https://reactjs.org/" target="_blank" title="React"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="30" height="30"/> </a> 
     <a href="https://nodejs.org" target="_blank" title="Node.js"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="30" height="30"/> </a> 
-    <a href="https://expressjs.com" target="_blank" title="Express.js"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/express/express-original-wordmark.svg" alt="express" width="30" height="30"/> </a>
+    <a href="https://expressjs.com" target="_blank" title="Express.js"> <img src="https://www.vectorlogo.zone/logos/expressjs/expressjs-ar21.png" alt="express" width="30" height="30"/> </a>
     <a href="https://www.postgresql.org" target="_blank" title="PostgreSQL"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="30" height="30"/> </a> 
 </p>
-
 
 -   Node.js & React.js
 -   [tailwindcss](https://tailwindcss.com/) - CSS Framework
@@ -91,17 +86,15 @@ Technologies:
 -   PostgreSQL Database Interaction
 -   Auth with JWT
 
-## Preview
-
 ### Links
 
--   Repo URL: [Solution](https://github.com/bensuz/MovieBox)
+-   Repo URL: [Source Code](https://github.com/bensuz/MovieBox)
 -   Live Site URL: [Live Site](https://moviebox-0lid.onrender.com/)
 
 ### Screenshot
 
-![](./public/screenshots/MovieBox_desktop.png)
-![](./public/screenshots/MovieBox_mobile.png)
+![](./client/public/screenshots/MovieBox_desktop.png)
+![](./client/public/screenshots/MovieBox_mobile.png)
 
 ## Author
 
