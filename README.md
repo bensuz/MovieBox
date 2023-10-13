@@ -7,6 +7,7 @@
 -   [Built with](#built-with)
 -   [What I learned](#what-i-learned)
 -   [Links](#links)
+-   [Preview](#preview)
 -   [Screenshot](#screenshot)
 -   [Author](#author)
 
@@ -74,6 +75,10 @@ Users should be able to:
 
 -   Repo URL: [Source Code](https://github.com/bensuz/MovieBox)
 -   Live Site URL: [Live Site](https://moviebox-0lid.onrender.com/)
+
+### Preview
+
+[![Watch the video](./client/public/screenshots/mq2.webp)](https://youtu.be/ZKFUGMUu_Hc)
 
 ### Screenshot
 
