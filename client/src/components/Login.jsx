@@ -57,7 +57,11 @@ function Login() {
                                         MovieBox
                                     </h4>
                                 </div>
-                                {context.errors?.message}
+                                {context.errors?.message && (
+                                    <p className="text-red-800 font-bold pb-2 text-center">
+                                        {context.errors.message}!
+                                    </p>
+                                )}
                                 <form
                                     className=" rounded-md flex flex-col gap-5 items-center w-full"
                                     onSubmit={handleSubmit}

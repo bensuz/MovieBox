@@ -1,6 +1,6 @@
 // new user registration page
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { AuthContext } from "../context/Auth";
 import { Link, Navigate } from "react-router-dom";
 import logo from "../assets/logo_new.png";
@@ -10,9 +10,12 @@ import "reactjs-popup/dist/index.css";
 import Animations from "./Animations";
 
 const Register = () => {
-    window.scrollTo(0, 0);
     const [isPopupTCOpen, setIsPopupTCOpen] = useState(false);
     const [isPopupPOpen, setIsPopupPOpen] = useState(false);
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     //for terms and conditions popup
     const openTCPopup = () => {

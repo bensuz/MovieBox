@@ -26,11 +26,7 @@ const MyList = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
         axios
-            .get(
-                `/api/usermovies/${
-                    context.user.id
-                }`
-            )
+            .get(`/api/usermovies/${context.user.id}`)
             .then((res) => {
                 // console.log(res.data);
                 setMovies(res.data);
@@ -100,7 +96,7 @@ const MyList = () => {
             {movies.length > 0 ? (
                 <>
                     {" "}
-                    <div className=" bg-slate-800 pt-[200px] flex flex-col justify-start items-center gap-20 min-h-screen  pb-10 ">
+                    <div className=" bg-slate-800 pt-[200px] flex flex-col justify-start items-center gap-20 min-h-fit  pb-10 ">
                         <div className="flex gap-4 items-center justify-start max-lg:flex-col-reverse ">
                             <div
                                 className="flex gap-4 relative"
@@ -319,7 +315,7 @@ const MyList = () => {
                             </div>
                         )}
                     </div>
-                    <div className=" bg-slate-800 flex justify-around pb-24 pt-10">
+                    <div className=" bg-slate-800 flex justify-around pb-24 ">
                         <button
                             className=" rounded-xl bg-mb-quartery hover:bg-pink-800 text-white p-3 self-end "
                             onClick={handleAddMovie}

@@ -45,7 +45,7 @@ const Search = () => {
                 Results based on your search for: &quot;{query}
                 &quot;:
             </p>
-            <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center my-3 gap-8 pb-20 ">
+            <div className="card w-full shadow-xl text-white flex flex-wrap justify-center items-center my-3 gap-8 pb-20 px-14">
                 {searchResults?.map((movie) => (
                     <div
                         key={movie.id}
@@ -77,7 +77,7 @@ const Search = () => {
                                                 Not available
                                             </p>
                                         ) : (
-                                            movie.vote_average
+                                            movie.vote_average.toFixed(1)
                                         )}
                                     </div>
                                     <div className="card-actions flex justify-between items-center gap-11">
