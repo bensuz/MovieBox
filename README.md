@@ -13,7 +13,7 @@
 
 ## Overview
 
-MovieBox is a full CRUD web application that allows users to discover, search, and manage their favorite movies. With a user-friendly interface and a vast database of movies, it's the perfect platform for movie enthusiasts. Whether you want to create your watchlist, explore movie details, or stay updated with the latest releases, MovieBox has you covered.
+**MovieBox** is a full CRUD web application that allows users to discover, search, and manage their favorite movies. With a user-friendly interface and a vast database of movies, it's the perfect platform for movie enthusiasts. Whether you want to create your watchlist, explore movie details, or stay updated with the latest releases, MovieBox has you covered.
 
 ### Functionality
 
