@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url><loc>https://moviebox-0lid.onrender.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>
+    <url><loc>https://moviebox-0lid.onrender.com/?list=top_rated</loc><changefreq>daily</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/?list=now_playing</loc><changefreq>daily</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/?list=upcoming</loc><changefreq>daily</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/search</loc><changefreq>monthly</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/register</loc><changefreq>yearly</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/login</loc><changefreq>yearly</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/privacy</loc><changefreq>yearly</changefreq></url>
+    <url><loc>https://moviebox-0lid.onrender.com/terms</loc><changefreq>yearly</changefreq></url>
+</urlset>

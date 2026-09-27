@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /mylist
+Disallow: /profile
+Disallow: /movies/new
+Disallow: /search/
+
+Sitemap: https://moviebox-0lid.onrender.com/sitemap.xml

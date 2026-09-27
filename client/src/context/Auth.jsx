@@ -1,122 +1,91 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable react/prop-types */
-import { createContext, useState, useEffect, useContext } from "react";
-import axios from "../axiosInstance";
-import { useNavigate } from "react-router-dom";
-export const AuthContext = createContext();
+import {
+    createContext,
+    useCallback,
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+} from "react";
+import { authApi } from "../lib/api";
+
+const AuthContext = createContext(null);
+
+// Remembers whether this browser had a session, so the header can render the
+// right controls before /currentUser answers (no layout shift on load).
+const HINT_KEY = "moviebox:signed-in";
+const readHint = () => {
+    try {
+        return localStorage.getItem(HINT_KEY) === "1";
+    } catch {
+        return false;
+    }
+};
+const writeHint = (signedIn) => {
+    try {
+        if (signedIn) localStorage.setItem(HINT_KEY, "1");
+        else localStorage.removeItem(HINT_KEY);
+    } catch {
+        // Storage can be unavailable (private mode, blocked cookies).
+    }
+};
 
 // eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
     return useContext(AuthContext);
 }
 
+// Holds the signed-in user. Pages handle their own navigation and errors;
+// every action throws an HttpError on failure.
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [uploading, setUploading] = useState(false);
-    const [errors, setErrors] = useState(null);
-    const navigate = useNavigate();
+    const [likelySignedIn] = useState(readHint);
 
-    const setState = (user, loading, errors) => {
-        setUser(user);
-        setLoading(loading);
-        setErrors(errors);
-    };
-
-    // Are we logged in?
     useEffect(() => {
-        axios
-            .get("api/auth/currentUser")
-            .then((res) => setState(res.data.user, false, null))
-            .catch((error) => {
-                setState(null, false, null);
-            });
+        if (!loading) writeHint(Boolean(user));
+    }, [user, loading]);
+
+    useEffect(() => {
+        authApi
+            .currentUser()
+            .then(setUser)
+            .catch(() => setUser(null))
+            .finally(() => setLoading(false));
     }, []);
 
-    const login = async (user) => {
-        setLoading(true);
-        try {
-            const res = await axios.post("api/auth/login", user);
-            console.log("user loggin in", res);
-            setState(res.data.user, false, null);
-            navigate("/");
-        } catch (error) {
-            console.log(error.response);
-            setState(null, false, error.response.data);
-        }
-    };
-    const register = async (user) => {
-        setLoading(true);
-        try {
-            const res = await axios.post("api/auth/register", user);
-            setState(res.data.user, false, null);
-            navigate("/");
-        } catch (error) {
-            console.log(error.response);
-            setState(null, false, error.response.data.errors);
-        }
-    };
-    const logout = async () => {
-        setLoading(true);
-        try {
-            const res = await axios.post("api/auth/logout", {});
-            setState(null, false, null);
-            navigate("/");
-            window.location.reload();
-        } catch (error) {
-            console.log(error.response);
-            setState(null, false, error.response.errors);
-        }
-    };
-    const uploadAvatar = (formData) => {
-        setUploading(true);
-        console.log("this is for the formdata", formData);
-        axios
-            .post("api/auth/upload-avatar", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
-            .then((res) => {
-                console.log("this is response.data for img upload", res.data);
+    const login = useCallback(async (credentials) => {
+        const signedIn = await authApi.login(credentials);
+        setUser(signedIn);
+        return signedIn;
+    }, []);
 
-                setUser({ ...user, avatar: res.data.user.avatar });
-                setUploading(false);
-            })
-            .catch((error) => {
-                console.log(error);
-                setUploading(false);
-            });
-    };
+    const register = useCallback(async (details) => {
+        const created = await authApi.register(details);
+        setUser(created);
+        return created;
+    }, []);
 
-    const deleteAvatar = () => {
-        axios
-            .delete("api/auth/delete-avatar") 
-            .then((res) => {
-                setUser({ ...user, avatar: null });
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
+    const logout = useCallback(async () => {
+        await authApi.logout();
+        setUser(null);
+    }, []);
 
-    return (
-        <AuthContext.Provider
-            value={{
-                user,
-                loading,
-                errors,
-                login,
-                register,
-                logout,
-                uploadAvatar,
-                uploading,
-                deleteAvatar,
-            }}
-        >
-            {children}
-        </AuthContext.Provider>
+    const uploadAvatar = useCallback(async (file) => {
+        const avatar = await authApi.uploadAvatar(file);
+        setUser((current) => ({ ...current, avatar }));
+    }, []);
+
+    const deleteAvatar = useCallback(async () => {
+        await authApi.deleteAvatar();
+        setUser((current) => ({ ...current, avatar: null }));
+    }, []);
+
+    const value = useMemo(
+        () => ({ user, loading, likelySignedIn, login, register, logout, uploadAvatar, deleteAvatar }),
+        [user, loading, likelySignedIn, login, register, logout, uploadAvatar, deleteAvatar]
     );
+
+    return <AuthContext value={value}>{children}</AuthContext>;
 };
 
 export default AuthProvider;

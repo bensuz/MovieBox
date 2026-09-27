@@ -9,7 +9,14 @@ router.post("/register", authController.register);
 // User Login Route
 router.post("/login", authController.login);
 
-router.get("/currentUser", authenticate, authController.getLoggedInUser);
+// Signed-out visitors get `{ user: null }` rather than a 403, so checking the
+// session on page load doesn't log an error in the browser console.
+router.get(
+    "/currentUser",
+    (req, res, next) =>
+        req.cookies.accessToken ? authenticate(req, res, next) : res.json({ user: null }),
+    authController.getLoggedInUser
+);
 
 // User Logout Route
 router.post("/logout", authController.logOut);
