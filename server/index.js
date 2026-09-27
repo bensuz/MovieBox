@@ -41,8 +41,21 @@ if (process.env.NODE_ENV === "production") {
     );
     app.use(express.static(buildPath, { maxAge: "1h", index: false }));
 
-    const indexHtml = fs.readFileSync(path.join(buildPath, "index.html"), "utf8");
+    // A missing client build must not take the API down with it: log it and
+    // answer page requests with a 503 until the build exists.
+    const indexPath = path.join(buildPath, "index.html");
+    let indexHtml = null;
+    if (!fs.existsSync(indexPath)) {
+        console.error(`Client build not found at ${indexPath}. Run "npm run build" in client/.`);
+    }
+
     app.get("*", async (req, res) => {
+        if (indexHtml === null && fs.existsSync(indexPath)) {
+            indexHtml = fs.readFileSync(indexPath, "utf8");
+        }
+        if (indexHtml === null) {
+            return res.status(503).send("MovieBox is being deployed. Please try again shortly.");
+        }
         // On the homepage, hint the hero image so it loads alongside the JS.
         const hint = req.path === "/" ? await featuredPreloadTag() : "";
         res.set("Cache-Control", "no-cache");
